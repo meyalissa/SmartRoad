@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============================================================
+         CENTRALIZED COLOR SYSTEM
+         Brand source of truth = config/BrandColors.java
+         These XML values mirror BrandColors so layouts/themes
+         can reference them. Change branding in ONE place:
+         edit BrandColors.java AND these few brand colors below.
+         ============================================================ -->
+
+    <!-- Brand -->
+    <color name="primaryColor">#1976D2</color>
+    <color name="primaryDarkColor">#115293</color>
+    <color name="secondaryColor">#0288D1</color>
+    <color name="accentColor">#FF9800</color>
+
+    <!-- Surfaces / background (light) -->
+    <color name="backgroundColor">#F5F7FA</color>
+    <color name="surfaceColor">#FFFFFF</color>
+
+    <!-- Text (light) -->
+    <color name="textPrimaryColor">#1A1C1E</color>
+    <color name="textSecondaryColor">#5F6368</color>
+
+    <!-- Status / semantic -->
+    <color name="successColor">#2E7D32</color>
+    <color name="warningColor">#F9A825</color>
+    <color name="errorColor">#C62828</color>
+
+    <!-- On-brand text -->
+    <color name="onPrimaryColor">#FFFFFF</color>
+    <color name="onSecondaryColor">#FFFFFF</color>
+
+    <!-- Hazard marker colors -->
+    <color name="mapMarkerPothole">#E53935</color>      <!-- Red -->
+    <color name="mapMarkerFlood">#1E88E5</color>        <!-- Blue -->
+    <color name="mapMarkerAccident">#FB8C00</color>     <!-- Orange -->
+    <color name="mapMarkerTree">#43A047</color>         <!-- Green -->
+    <color name="mapMarkerRoadSign">#8E24AA</color>     <!-- Purple -->
+    <color name="mapMarkerTrafficLight">#FDD835</color> <!-- Yellow -->
+
+    <!-- Status badge colors -->
+    <color name="statusNew">#1E88E5</color>
+    <color name="statusInvestigation">#F9A825</color>
+    <color name="statusResolved">#2E7D32</color>
+
+    <!-- Launcher background -->
+    <color name="ic_launcher_background">#1976D2</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>

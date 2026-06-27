@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartRoad</string>
+
+    <!-- Login -->
+    <string name="login_title">SmartRoad</string>
+    <string name="login_subtitle">Crowdsourced Road Hazard Reporting</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="action_login">Login</string>
+    <string name="error_username_required">Please enter your username</string>
+    <string name="error_password_required">Please enter your password</string>
+    <string name="login_failed">Login failed. Check your credentials.</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_home">Home</string>
+    <string name="nav_map">Hazard Map</string>
+    <string name="nav_report">Report</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Home -->
+    <string name="welcome_user">Welcome, %1$s</string>
+    <string name="current_location">Current Location</string>
+    <string name="latitude_label">Latitude</string>
+    <string name="longitude_label">Longitude</string>
+    <string name="total_hazards">Total Hazards</string>
+    <string name="resolved_hazards">Resolved</string>
+    <string name="pending_hazards">Pending</string>
+    <string name="action_view_map">View Map</string>
+    <string name="action_report_hazard">Report Hazard</string>
+
+    <!-- Map -->
+    <string name="hazard_map">Hazard Map</string>
+    <string name="action_refresh">Refresh</string>
+
+    <!-- Report -->
+    <string name="report_hazard">Report Hazard</string>
+    <string name="hazard_type">Hazard Type</string>
+    <string name="description">Description</string>
+    <string name="hint_description">Describe the hazard…</string>
+    <string name="photo">Photo</string>
+    <string name="action_take_photo">Camera</string>
+    <string name="action_choose_gallery">Gallery</string>
+    <string name="action_submit">Submit Report</string>
+    <string name="gps_location">GPS Location</string>
+    <string name="report_success_title">Report Submitted</string>
+    <string name="report_success_message">Thank you! Your hazard report has been submitted successfully.</string>
+    <string name="action_ok">OK</string>
+
+    <!-- Detail -->
+    <string name="hazard_details">Hazard Details</string>
+    <string name="reported_by">Reported By</string>
+    <string name="status">Status</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+
+    <!-- Profile -->
+    <string name="profile">Profile</string>
+    <string name="username_label">Username</string>
+    <string name="total_reports">Total Reports</string>
+    <string name="reports_resolved">Resolved</string>
+    <string name="reports_pending">Pending</string>
+    <string name="action_edit_profile">Edit Profile</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- About -->
+    <string name="about">About</string>
+    <string name="app_version">Version 1.0</string>
+    <string name="project_description">SmartRoad is a crowdsourced road hazard reporting and monitoring system that lets users report potholes, flooding, fallen trees, accidents, damaged road signs, and broken traffic lights with GPS and photo evidence.</string>
+    <string name="developers_title">Developers</string>
+    <string name="dev1">Melissa Sofia Binti Shahran — 2025397307</string>
+    <string name="dev2">Khaulah Kareema Binti Sofian — 2025101461</string>
+    <string name="dev3">Marsya Qistina Binti Meor Rusydi — 2025106901</string>
+    <string name="dev4">Nur Farah Aisyah Binti Sharudin — 2025178939</string>
+    <string name="copyright">© 2026 SmartRoad. All rights reserved.</string>
+    <string name="github_label">Project Website / GitHub</string>
+    <string name="github_url">https://github.com/meyalissa/SmartRoad</string>
+
+    <!-- Permissions -->
+    <string name="permission_location_rationale">Location permission is needed to show your position and tag hazard reports.</string>
+    <string name="permission_camera_rationale">Camera permission is needed to attach a photo to your report.</string>
+</resources>
