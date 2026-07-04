@@ -6,10 +6,10 @@
     <aside class="sidebar">
       <div class="sidebar-logo">SmartRoad</div>
       <nav class="sidebar-nav">
-        <a href="dashboard.html" class="active">Dashboard</a>
-        <a href="manage-reports.html">Manage Reports</a>
-        <a href="add-hazard.html">Add Hazard</a>
-        <a href="#">Logout</a>
+        <a href="dashboard.php">Dashboard</a>
+        <a href="manage-report.php">Manage Reports</a>
+        <a href="hazard-form.php" class="active">Add Hazard</a>
+        <a href="login.php">Logout</a>
       </nav>
     </aside>
     <main class="page-content">

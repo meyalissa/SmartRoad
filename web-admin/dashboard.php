@@ -15,7 +15,7 @@
     <nav class="sidebar-nav">
       <a href="dashboard.php" class="active">Dashboard</a>
       <a href="manage-report.php">Manage Reports</a>
-      <a href="add-hazard.php">Add Hazard</a>
+      <a href="hazard-form.php">Add Hazard</a>
       <a href="login.php">Logout</a>
     </nav>
   </aside>
