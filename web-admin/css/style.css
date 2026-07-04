@@ -1,0 +1,374 @@
+/* ============================================================
+   SmartRoad Admin — Shared Stylesheet
+   Use this ONE file on every admin page (login, dashboard,
+   manage-reports, report-details, add-hazard) so the whole
+   web app looks consistent no matter who builds which page.
+   ============================================================ */
+
+:root {
+  /* --- Colour palette (matches the mobile app) --- */
+  --bg-dark: #1B1B23;        /* page background */
+  --surface: #26262F;        /* cards / panels */
+  --surface-alt: #1B1B23;    /* nested boxes inside a card */
+  --border: #3A3A44;
+
+  --primary-yellow: #F2C230; /* buttons, active nav, key numbers */
+  --pale-yellow: #FBE9A6;    /* badges, highlights, secondary numbers */
+
+  --text-primary: #F1F1F1;
+  --text-secondary: #9A9A9F;
+
+  --success: #6FCF97;        /* Resolved status */
+  --warning: #F2C230;        /* New status (reuse primary yellow) */
+  --info: #9A9A9F;           /* Under investigation status */
+  --danger: #E24B4A;         /* delete / required-field errors */
+
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   LAYOUT — used on every page except login
+   ============================================================ */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 16px;
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  color: var(--primary-yellow);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  padding-left: 8px;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+}
+
+.sidebar-nav a:hover { background: var(--surface-alt); color: var(--text-primary); }
+
+.sidebar-nav a.active {
+  background: var(--surface-alt);
+  color: var(--primary-yellow);
+  font-weight: 500;
+}
+
+.page-content {
+  flex: 1;
+  padding: 28px 32px;
+  max-width: 1200px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.card-title {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   STAT CARDS (dashboard)
+   ============================================================ */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 720px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-card {
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--pale-yellow);
+}
+
+.stat-value.accent { color: var(--primary-yellow); }
+.stat-value.success { color: var(--success); }
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-new { background: var(--warning); }
+.dot-investigating { background: var(--info); }
+.dot-resolved { background: var(--success); }
+
+/* ============================================================
+   FORM ELEMENTS — reuse on login, report-details, add-hazard
+   ============================================================ */
+.form-group { margin-bottom: 14px; }
+
+.form-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.required { color: var(--danger); }
+
+.form-error {
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 4px;
+  display: none;
+}
+.form-error.show { display: block; }
+
+.input, .select, .textarea {
+  width: 100%;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--primary-yellow);
+}
+
+.input.invalid, .textarea.invalid { border-color: var(--danger); }
+
+.textarea { resize: vertical; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary { background: var(--primary-yellow); color: var(--bg-dark); }
+.btn-primary:hover { background: #e0af1f; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover { background: var(--surface-alt); }
+
+.btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+.btn-danger:hover { background: rgba(226,75,74,0.1); }
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 4px;
+}
+.btn-icon.view { color: var(--primary-yellow); }
+.btn-icon.delete:hover { color: var(--danger); }
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th {
+  text-align: left;
+  font-weight: 400;
+  color: var(--text-secondary);
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--border);
+}
+.table td { padding: 10px 6px; border-bottom: 1px solid var(--border); }
+.table tr:hover td { background: rgba(242,194,48,0.04); }
+
+/* ============================================================
+   BADGES (status)
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+.badge-new { background: var(--pale-yellow); color: #5C4A00; }
+.badge-investigating { background: var(--border); color: var(--text-primary); }
+.badge-resolved { background: rgba(111,207,151,0.15); color: var(--success); }
+
+/* ============================================================
+   SEARCH / FILTER BAR
+   ============================================================ */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.filter-bar .input { flex: 1; min-width: 160px; }
+.filter-bar .select { width: auto; min-width: 130px; }
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--text-secondary);
+}
+.empty-state .icon { font-size: 28px; margin-bottom: 8px; display: block; }
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+.pagination button {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.pagination button.active {
+  background: var(--primary-yellow);
+  color: var(--bg-dark);
+  border-color: var(--primary-yellow);
+  font-weight: 600;
+}
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ============================================================
+   PHOTO PREVIEW / UPLOAD
+   ============================================================ */
+.photo-box {
+  background: var(--surface-alt);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  height: 56px;
+  width: 56px;
+  overflow: hidden;
+}
+.photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ============================================================
+   MODAL (delete confirmation, photo lightbox)
+   ============================================================ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-overlay.show { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  max-width: 360px;
+  width: 90%;
+}
+.modal-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.modal-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.flex { display: flex; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.text-muted { color: var(--text-secondary); }
+.text-accent { color: var(--primary-yellow); }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
