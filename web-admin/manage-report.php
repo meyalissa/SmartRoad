@@ -16,7 +16,7 @@
       <a href="dashboard.php">Dashboard</a>
       <a href="manage-report.php" class="active">Manage Reports</a>
       <a href="hazard-form.php">Add Hazard</a>
-      <a href="login.php">Logout</a>
+      <a href="logout.php">Logout</a>
     </nav>
   </aside>
 
