@@ -243,7 +243,7 @@ function renderPagination(totalPages) {
    window.location.href = `report-details.html?id=${id}`;
 */
 function viewReport(id) {
-  window.location.href = `report-details.html?id=${id}`;
+  window.location.href = `report-details.php?id=${id}`;
 }
 
 /* ============ DELETE ============ */
