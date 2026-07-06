@@ -29,20 +29,22 @@
       <div class="filter-bar">
         <input class="input" type="text" id="searchInput" placeholder="Search by user or description...">
 
+        <!-- values match the hazard_type ENUM in the database exactly -->
         <select class="select" id="hazardFilter">
           <option value="">All hazard types</option>
           <option value="Pothole">Pothole</option>
           <option value="Flood">Flood</option>
           <option value="Accident">Accident</option>
           <option value="Fallen Tree">Fallen Tree</option>
-          <option value="Damaged Sign">Damaged Sign</option>
+          <option value="Damaged Road Sign">Damaged Road Sign</option>
           <option value="Broken Traffic Light">Broken Traffic Light</option>
         </select>
 
+        <!-- values match the status ENUM in the database exactly -->
         <select class="select" id="statusFilter">
           <option value="">All statuses</option>
           <option value="New">New</option>
-          <option value="Investigating">Under Investigation</option>
+          <option value="Under Investigation">Under Investigation</option>
           <option value="Resolved">Resolved</option>
         </select>
 
@@ -71,10 +73,10 @@
         </tbody>
       </table>
 
-      <!-- ============ EMPTY STATE ============ -->
+      <!-- ============ EMPTY STATE (also used for load errors) ============ -->
       <div class="empty-state" id="emptyState" style="display:none">
         <i class="ti ti-search-off icon" aria-hidden="true"></i>
-        No reports found for these filters.
+        <span id="emptyStateText">No reports found for these filters.</span>
       </div>
 
       <!-- ============ PAGINATION ============ -->
@@ -98,28 +100,28 @@
 
 <script>
 /* ============================================================
-   MOCK DATA
-   Replace this block with a real fetch() call to your backend, e.g.:
-
-   let reports = [];
-   async function loadReports() {
-     const res = await fetch('api/get_reports.php');
-     reports = await res.json();
-     renderTable();
-   }
-   loadReports();
-
-   Each report object from your PHP/Node endpoint should have the
-   same shape as the mock objects below.
+   REAL DATA — loaded from the database via api/get_reports.php
    ============================================================ */
-let reports = [
-  { id: 101, user: "Ali Ahmad",  date: "2026-06-02T14:30", hazard: "Flood",   lat: 2.3115, lng: 102.3218, status: "New",           photo: "flood1.jpg" },
-  { id: 102, user: "Abu Bakar",  date: "2026-06-02T09:12", hazard: "Pothole", lat: 2.3120, lng: 102.3225, status: "Resolved",       photo: "pothole1.jpg" },
-  { id: 103, user: "Siti Noor",  date: "2026-06-03T18:05", hazard: "Accident",lat: 2.3140, lng: 102.3260, status: "Investigating",  photo: "accident1.jpg" },
-  { id: 104, user: "Ravi Kumar", date: "2026-06-04T07:45", hazard: "Fallen Tree", lat: 2.3090, lng: 102.3200, status: "New",        photo: "tree1.jpg" },
-  { id: 105, user: "Wei Ling",   date: "2026-06-04T20:15", hazard: "Pothole", lat: 2.3105, lng: 102.3230, status: "Resolved",       photo: "pothole2.jpg" },
-  { id: 106, user: "Ali Ahmad",  date: "2026-06-05T11:00", hazard: "Broken Traffic Light", lat: 2.3130, lng: 102.3240, status: "Investigating", photo: "light1.jpg" },
-];
+let reports = [];
+
+async function loadReports() {
+  try {
+    const res = await fetch('get_report.php');
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    reports = data;
+    renderTable();
+  } catch (err) {
+    console.error('Failed to load reports:', err);
+    document.getElementById('reportsTable').style.display = "none";
+    document.getElementById('pagination').innerHTML = "";
+    document.getElementById('emptyStateText').textContent =
+      "Couldn't load reports from the server. Check your database connection.";
+    document.getElementById('emptyState').style.display = "block";
+  }
+}
 
 const ROWS_PER_PAGE = 5;
 let currentPage = 1;
@@ -141,13 +143,9 @@ const deleteModal    = document.getElementById('deleteModal');
 
 function statusBadgeClass(status) {
   if (status === "New") return "badge-new";
-  if (status === "Investigating") return "badge-investigating";
+  if (status === "Under Investigation") return "badge-investigating";
   if (status === "Resolved") return "badge-resolved";
   return "";
-}
-
-function statusLabel(status) {
-  return status === "Investigating" ? "Under Investigation" : status;
 }
 
 function getFilteredReports() {
@@ -157,7 +155,10 @@ function getFilteredReports() {
   const date = dateFilter.value; // yyyy-mm-dd
 
   let result = reports.filter(r => {
-    const matchesSearch = !q || r.user.toLowerCase().includes(q) || r.hazard.toLowerCase().includes(q);
+    const matchesSearch = !q
+      || r.user.toLowerCase().includes(q)
+      || r.hazard.toLowerCase().includes(q)
+      || (r.description && r.description.toLowerCase().includes(q));
     const matchesHazard = !hazard || r.hazard === hazard;
     const matchesStatus = !status || r.status === status;
     const matchesDate = !date || r.date.startsWith(date);
@@ -183,6 +184,7 @@ function renderTable() {
   tbody.innerHTML = "";
 
   if (filtered.length === 0) {
+    document.getElementById('emptyStateText').textContent = "No reports found for these filters.";
     emptyState.style.display = "block";
     document.getElementById('reportsTable').style.display = "none";
   } else {
@@ -199,8 +201,8 @@ function renderTable() {
         <td>${r.user}</td>
         <td>${dateStr}, ${timeStr}</td>
         <td>${r.hazard}</td>
-        <td>${r.lat.toFixed(4)}, ${r.lng.toFixed(4)}</td>
-        <td><span class="badge ${statusBadgeClass(r.status)}">${statusLabel(r.status)}</span></td>
+        <td>${Number(r.lat).toFixed(4)}, ${Number(r.lng).toFixed(4)}</td>
+        <td><span class="badge ${statusBadgeClass(r.status)}">${r.status}</span></td>
         <td>
           <button class="btn-icon view" title="View" onclick="viewReport(${r.id})"><i class="ti ti-eye" aria-hidden="true"></i></button>
           <button class="btn-icon delete" title="Delete" onclick="openDeleteModal(${r.id})"><i class="ti ti-trash" aria-hidden="true"></i></button>
@@ -238,15 +240,11 @@ function renderPagination(totalPages) {
   paginationEl.appendChild(nextBtn);
 }
 
-/* ============ VIEW ============
-   Replace with your real navigation, e.g.:
-   window.location.href = `report-details.html?id=${id}`;
-*/
 function viewReport(id) {
   window.location.href = `report-details.php?id=${id}`;
 }
 
-/* ============ DELETE ============ */
+/* ============ DELETE (real DB call) ============ */
 function openDeleteModal(id) {
   pendingDeleteId = id;
   deleteModal.classList.add('show');
@@ -257,17 +255,29 @@ document.getElementById('cancelDelete').onclick = () => {
   deleteModal.classList.remove('show');
 };
 
-document.getElementById('confirmDelete').onclick = () => {
-  /* Replace this with a real API call, e.g.:
-     await fetch(`api/delete_report.php?id=${pendingDeleteId}`, { method: 'DELETE' });
-     then re-fetch or splice locally on success.
-  */
-  reports = reports.filter(r => r.id !== pendingDeleteId);
-  deleteModal.classList.remove('show');
-  renderTable();
+document.getElementById('confirmDelete').onclick = async () => {
+  const confirmBtn = document.getElementById('confirmDelete');
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = "Deleting...";
+
+  try {
+    const res = await fetch(`delete_report.php?id=${pendingDeleteId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Delete failed');
+
+    reports = reports.filter(r => r.id !== pendingDeleteId);
+    renderTable();
+  } catch (err) {
+    console.error('Failed to delete report:', err);
+    alert("Couldn't delete this report. Please try again.");
+  } finally {
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = "Delete";
+    deleteModal.classList.remove('show');
+  }
 };
 
-renderTable();
+loadReports();
 </script>
 </body>
 </html>
