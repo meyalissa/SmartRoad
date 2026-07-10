@@ -10,6 +10,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Empty state (logo watermark), shown when no hazards are available -->
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:alpha="0.35"
+            android:contentDescription="@null"
+            android:src="@drawable/logo_smartroad_mark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:text="@string/no_hazards_found"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+    </LinearLayout>
+
     <!-- Refresh FAB (large, bottom-right, thumb-friendly) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabRefresh"

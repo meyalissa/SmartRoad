@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -43,6 +44,7 @@ public class ReportFragment extends Fragment {
     private String dateString = "", timeString = "";
     private File photoFile;
     private Uri cameraUri;
+    private AlertDialog loadingDialog;
 
     private ActivityResultLauncher<String[]> locationPermissionLauncher;
     private ActivityResultLauncher<String> cameraPermissionLauncher;
@@ -195,11 +197,13 @@ public class ReportFragment extends Fragment {
 
         String datetime = dateString + " " + timeString;
         binding.btnSubmit.setEnabled(false);
+        showLoading();
 
         viewModel.submit(type, desc,
                 String.valueOf(latitude), String.valueOf(longitude),
                 datetime, photoFile)
                 .observe(getViewLifecycleOwner(), response -> {
+                    hideLoading();
                     binding.btnSubmit.setEnabled(true);
                     if (response != null && response.isSuccess()) {
                         showSuccessDialog();
@@ -208,6 +212,20 @@ public class ReportFragment extends Fragment {
                                 "Submission failed. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void showLoading() {
+        View dialogView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_loading, null);
+        loadingDialog = new MaterialAlertDialogBuilder(requireContext())
+                .setView(dialogView)
+                .setCancelable(false)
+                .create();
+        loadingDialog.show();
+    }
+
+    private void hideLoading() {
+        if (loadingDialog != null && loadingDialog.isShowing()) loadingDialog.dismiss();
     }
 
     private void showSuccessDialog() {
@@ -231,6 +249,7 @@ public class ReportFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        hideLoading();
         binding = null;
         super.onDestroyView();
     }

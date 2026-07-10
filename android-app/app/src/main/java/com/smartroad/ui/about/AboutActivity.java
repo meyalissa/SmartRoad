@@ -1,6 +1,7 @@
 package com.smartroad.ui.about;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.toolbar.setNavigationOnClickListener(v -> finish());
+        binding.tvAppVersion.setText(getString(R.string.version_label, appVersionName()));
 
         // Clickable GitHub URL -> opens in browser
         binding.btnGithub.setOnClickListener(v -> {
@@ -28,5 +30,13 @@ public class AboutActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         });
+    }
+
+    private String appVersionName() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            return "";
+        }
     }
 }

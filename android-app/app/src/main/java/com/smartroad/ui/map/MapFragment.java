@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -90,13 +89,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
 
     private void loadHazards() {
         viewModel.getHazards().observe(getViewLifecycleOwner(), hazards -> {
-            if (googleMap == null) return;
+            if (googleMap == null || binding == null) return;
             googleMap.clear();
             markerHazardMap.clear();
-            if (hazards == null || hazards.isEmpty()) {
-                Toast.makeText(getContext(), "No hazards available", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            boolean isEmpty = hazards == null || hazards.isEmpty();
+            binding.emptyState.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+            if (isEmpty) return;
             for (Hazard h : hazards) {
                 LatLng pos = new LatLng(h.getLatitudeAsDouble(), h.getLongitudeAsDouble());
                 Marker marker = googleMap.addMarker(new MarkerOptions()

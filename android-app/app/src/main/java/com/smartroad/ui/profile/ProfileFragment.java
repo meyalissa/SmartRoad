@@ -1,6 +1,7 @@
 package com.smartroad.ui.profile;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ public class ProfileFragment extends Fragment {
 
         binding.tvProfileName.setText(session.getFullName());
         binding.tvProfileUsername.setText("@" + session.getUsername());
+        binding.tvAppVersion.setText(getString(R.string.version_label, appVersionName()));
 
         viewModel.loadProfile(session.getUserId(), session.getFullName(), session.getUsername())
                 .observe(getViewLifecycleOwner(), profile -> {
@@ -70,6 +72,15 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "Edit profile coming soon", Toast.LENGTH_SHORT).show());
 
         binding.btnLogout.setOnClickListener(v -> confirmLogout());
+    }
+
+    private String appVersionName() {
+        try {
+            return requireContext().getPackageManager()
+                    .getPackageInfo(requireContext().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            return "";
+        }
     }
 
     private void confirmLogout() {
