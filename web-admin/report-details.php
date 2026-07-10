@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <style>
         button:disabled {
@@ -25,22 +26,8 @@
 
     <div class="admin-layout">
 
-        <aside class="sidebar">
-
-            <div class="sidebar-logo">
-                SmartRoad
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="dashboard.php">Dashboard</a>
-                <a href="manage-report.php" class="active">Manage Reports</a>
-                <a href="hazard-form.php">Add Hazard</a>
-                <a href="logout.php">Logout</a>
-            </nav>
-
-        </aside>
-
-
+        <?php $active_page = 'hazard-form'; require 'sidebar.php'; ?>
+    
         <main class="page-content">
 
             <div style="margin-bottom:20px;">
