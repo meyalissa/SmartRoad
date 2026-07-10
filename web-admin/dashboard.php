@@ -12,7 +12,7 @@ $resolvedCount = $pdo->query("SELECT COUNT(*) FROM hazard_reports WHERE status =
 
 // --- Recent reports (latest 5, joined with the reporting user) --
 $recent = $pdo->query("
-    SELECT hr.id, hr.hazard_type, hr.status, hr.reported_at, u.full_name
+    SELECT hr.id, hr.hazard_type, hr.status, hr.reported_at, u.full_name, u.profile_picture
     FROM hazard_reports hr
     JOIN users u ON u.id = hr.user_id
     ORDER BY hr.reported_at DESC
@@ -114,7 +114,13 @@ function statusBadge($status) {
                         <tr>
                             <td>
                                 <div class="user-cell">
-                                    <span class="avatar-circle"><?= htmlspecialchars(initials($r['full_name'])) ?></span>
+                                    <?php if (!empty($r['profile_picture'])): ?>
+                                        <img src="uploads/users/<?= htmlspecialchars($r['profile_picture']) ?>"
+                                             alt="<?= htmlspecialchars($r['full_name']) ?>"
+                                             class="avatar-circle" style="object-fit:cover">
+                                    <?php else: ?>
+                                        <span class="avatar-circle"><?= htmlspecialchars(initials($r['full_name'])) ?></span>
+                                    <?php endif; ?>
                                     <?= htmlspecialchars($r['full_name']) ?>
                                 </div>
                             </td>
