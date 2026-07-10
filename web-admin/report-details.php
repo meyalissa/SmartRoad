@@ -1,6 +1,5 @@
-<!-- hello hiii-->
 <?php
-require_once 'auth.php';
+  require_once 'auth.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,28 +38,17 @@ require_once 'auth.php';
                 <a href="logout.php">Logout</a>
             </nav>
 
-<<<<<<< HEAD
-        <div style="margin-bottom:20px;">
-    <button class="btn" onclick="history.back()">
-        <i class="ti ti-arrow-left"></i>
-        Back
-    </button>
-</div>
-
-<div class="page-title">
-    Report Details
-</div>
-=======
         </aside>
 
->>>>>>> f1ed233a5ffae8837f2a00a50f0ef32d170c1f52
 
         <main class="page-content">
 
-            <button class="btn" onclick="history.back()">
-                <i class="ti ti-arrow-left"></i>
-                Back
-            </button>
+            <div style="margin-bottom:20px;">
+                <button class="btn" onclick="history.back()">
+                    <i class="ti ti-arrow-left"></i>
+                    Back
+                </button>
+            </div>
 
 
             <div class="page-title">
