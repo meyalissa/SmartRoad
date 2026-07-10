@@ -49,20 +49,13 @@ function statusBadge($status) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartRoad Admin — Dashboard</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
 
 <div class="admin-layout">
 
-    <aside class="sidebar">
-    <div class="sidebar-logo">SmartRoad</div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.php" class="active">Dashboard</a>
-      <a href="manage-report.php">Manage Reports</a>
-      <a href="hazard-form.php">Add Hazard</a>
-      <a href="logout.php">Logout</a>
-    </nav>
-</aside>
+    <?php $active_page = 'dashboard'; require 'sidebar.php'; ?>
 
     <main class="page-content">
 
