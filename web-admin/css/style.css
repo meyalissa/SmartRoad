@@ -53,6 +53,8 @@ body {
   border-right: 1px solid var(--border);
   padding: 24px 16px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-logo {
@@ -415,4 +417,43 @@ body {
 
 .table tr {
   transition: background 0.12s ease;
+}
+
+/* ============================================================
+   SIDEBAR ICONS + LOGOUT AT BOTTOM (additive)
+   ============================================================ */
+.sidebar-nav a i {
+  font-size: 16px;
+  width: 16px;
+  text-align: center;
+}
+
+.sidebar-logout {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.sidebar-logout a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+}
+.sidebar-logout a i {
+  font-size: 16px;
+  width: 16px;
+  text-align: center;
+}
+.sidebar-logout a:hover {
+  background: var(--surface-alt);
+  color: var(--danger);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }
