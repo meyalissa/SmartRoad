@@ -8,19 +8,20 @@
          edit BrandColors.java AND these few brand colors below.
          ============================================================ -->
 
-    <!-- Brand -->
-    <color name="primaryColor">#1976D2</color>
-    <color name="primaryDarkColor">#115293</color>
-    <color name="secondaryColor">#0288D1</color>
-    <color name="accentColor">#FF9800</color>
+    <!-- Primary Brand -->
+    <color name="primaryColor">#F5A623</color>          <!-- Golden Orange -->
+    <color name="primaryDarkColor">#D98C10</color>      <!-- Dark Gold -->
+    <color name="secondaryColor">#F8C547</color>        <!-- Soft Yellow -->
+    <color name="accentColor">#FFB300</color>           <!-- Bright Amber -->
 
-    <!-- Surfaces / background (light) -->
-    <color name="backgroundColor">#F5F7FA</color>
-    <color name="surfaceColor">#FFFFFF</color>
+    <!-- Background -->
+    <color name="backgroundColor">#FFFFFF</color>       <!-- Main yellow background -->
+    <color name="surfaceColor">#FFFFFF</color>          <!-- Card background -->
 
-    <!-- Text (light) -->
-    <color name="textPrimaryColor">#1A1C1E</color>
-    <color name="textSecondaryColor">#5F6368</color>
+
+    <!-- Text -->
+    <color name="textPrimaryColor">#2E2E2E</color>
+    <color name="textSecondaryColor">#6B5A3A</color>
 
     <!-- Status / semantic -->
     <color name="successColor">#2E7D32</color>
@@ -39,13 +40,13 @@
     <color name="mapMarkerRoadSign">#8E24AA</color>     <!-- Purple -->
     <color name="mapMarkerTrafficLight">#FDD835</color> <!-- Yellow -->
 
-    <!-- Status badge colors -->
+    <!-- Status Badge -->
     <color name="statusNew">#1E88E5</color>
     <color name="statusInvestigation">#F9A825</color>
-    <color name="statusResolved">#2E7D32</color>
+    <color name="statusResolved">#43A047</color>
 
-    <!-- Launcher background -->
-    <color name="ic_launcher_background">#1976D2</color>
+    <!-- Launcher -->
+    <color name="ic_launcher_background">#F5A623</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
