@@ -41,7 +41,7 @@
 
                 <tr>
                     <th width="220">Report ID</th>
-                    <td id="reportID"></td>
+                    <td id="reportID">Loading...</td>
                 </tr>
 
                 <tr>
@@ -77,9 +77,13 @@
                 <tr>
                     <th>Photo</th>
                     <td>
-                        <img id="reportPhoto"
-                             src=""
-                             width="350">
+                        <img
+                            id="reportPhoto"
+                            src=""
+                            alt="Report Photo"
+                            width="350"
+                            style="max-width:100%;border-radius:8px;"
+                        >
                     </td>
                 </tr>
 
@@ -88,7 +92,7 @@
             <br>
 
             <button class="btn btn-warning"
-                    onclick="changeStatus('Investigating')">
+                    onclick="changeStatus('Under Investigation')">
                 Under Investigation
             </button>
 
@@ -105,58 +109,78 @@
 
 <script>
 
-let reports = [
-
-{ id:101,user:"Ali Ahmad",date:"2026-06-02T14:30",hazard:"Flood",lat:2.3115,lng:102.3218,status:"New",photo:"https://placehold.co/600x400?text=Flood"},
-
-{ id:102,user:"Abu Bakar",date:"2026-06-02T09:12",hazard:"Pothole",lat:2.3120,lng:102.3225,status:"Resolved",photo:"https://placehold.co/600x400?text=Pothole"},
-
-{ id:103,user:"Siti Noor",date:"2026-06-03T18:05",hazard:"Accident",lat:2.3140,lng:102.3260,status:"Investigating",photo:"https://placehold.co/600x400?text=Accident"},
-
-{ id:104,user:"Ravi Kumar",date:"2026-06-04T07:45",hazard:"Fallen Tree",lat:2.3090,lng:102.3200,status:"New",photo:"https://placehold.co/600x400?text=Tree"},
-
-{ id:105,user:"Wei Ling",date:"2026-06-04T20:15",hazard:"Pothole",lat:2.3105,lng:102.3230,status:"Resolved",photo:"https://placehold.co/600x400?text=Pothole"},
-
-{ id:106,user:"Ali Ahmad",date:"2026-06-05T11:00",hazard:"Broken Traffic Light",lat:2.3130,lng:102.3240,status:"Investigating",photo:"https://placehold.co/600x400?text=Traffic+Light"}
-
-];
-
 const params = new URLSearchParams(window.location.search);
+const reportId = Number(params.get("id"));
 
-const id = parseInt(params.get("id"));
+let report = null;
 
-const report = reports.find(r => r.id === id);
+async function loadReport() {
 
-if(report){
+    try {
 
-document.getElementById("reportID").innerHTML = report.id;
+        const response = await fetch("get_report.php");
 
-document.getElementById("reportUser").innerHTML = report.user;
+        if (!response.ok) {
+            throw new Error("Unable to fetch reports.");
+        }
 
-document.getElementById("reportDate").innerHTML =
-new Date(report.date).toLocaleString();
+        const reports = await response.json();
 
-document.getElementById("reportHazard").innerHTML = report.hazard;
+        report = reports.find(r => Number(r.id) === reportId);
 
-document.getElementById("reportLat").innerHTML = report.lat;
+        if (!report) {
+            alert("Report not found.");
+            return;
+        }
 
-document.getElementById("reportLng").innerHTML = report.lng;
+        document.getElementById("reportID").textContent = report.id;
+        document.getElementById("reportUser").textContent = report.user;
+        document.getElementById("reportHazard").textContent = report.hazard;
+        document.getElementById("reportLat").textContent = report.lat;
+        document.getElementById("reportLng").textContent = report.lng;
+        document.getElementById("reportStatus").textContent = report.status;
 
-document.getElementById("reportStatus").innerHTML = report.status;
+        document.getElementById("reportDate").textContent =
+            new Date(report.date).toLocaleString();
 
-document.getElementById("reportPhoto").src = report.photo;
+        document.getElementById("reportPhoto").src = report.photo;
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Failed to load report.");
+
+    }
 
 }
 
 function changeStatus(status){
 
-report.status = status;
+    if(!report){
+        return;
+    }
 
-document.getElementById("reportStatus").innerHTML = status;
+    report.status = status;
 
-alert("Status updated to " + status);
+    document.getElementById("reportStatus").textContent = status;
+
+    // Future:
+    // fetch("update_report_status.php", {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type":"application/json"
+    //     },
+    //     body: JSON.stringify({
+    //         id: report.id,
+    //         status: status
+    //     })
+    // });
+
+    alert("Status updated to " + status);
 
 }
+
+loadReport();
 
 </script>
 
