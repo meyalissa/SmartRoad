@@ -11,7 +11,9 @@
  */
 ?>
 <aside class="sidebar">
-    <div class="sidebar-logo">SmartRoad</div>
+    <div class="sidebar-logo">
+        <img src="uploads/logo.png" alt="SmartRoad logo" class="sidebar-logo-img"> SmartRoad
+    </div>
 
     <nav class="sidebar-nav">
         <a href="dashboard.php" class="<?= $active_page === 'dashboard' ? 'active' : '' ?>">
