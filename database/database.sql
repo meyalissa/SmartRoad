@@ -17,6 +17,7 @@ CREATE TABLE admin_users (
   username    VARCHAR(50) NOT NULL UNIQUE,
   password    VARCHAR(255) NOT NULL,   -- bcrypt hash, never store plain text
   full_name   VARCHAR(100) NOT NULL,
+  profile_picture VARCHAR(255) DEFAULT NULL,  -- filename stored in /uploads/admin
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -29,8 +30,10 @@ CREATE TABLE users (
   password    VARCHAR(255) NOT NULL,
   full_name   VARCHAR(100) NOT NULL,
   email       VARCHAR(100),
+  profile_picture VARCHAR(255) DEFAULT NULL,  -- filename stored in /uploads/users
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 -- ------------------------------------------------------------
 -- Hazard reports submitted from the mobile app
