@@ -26,14 +26,16 @@
 
     <main class="page-content">
 
-        <button class="btn" onclick="history.back()">
-            <i class="ti ti-arrow-left"></i>
-            Back
-        </button>
+        <div style="margin-bottom:20px;">
+    <button class="btn" onclick="history.back()">
+        <i class="ti ti-arrow-left"></i>
+        Back
+    </button>
+</div>
 
-        <div class="page-title">
-            Report Details
-        </div>
+<div class="page-title">
+    Report Details
+</div>
 
         <div class="card">
 
