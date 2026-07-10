@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "401551373165",
+    "project_id": "smartroad-6e1b0",
+    "storage_bucket": "smartroad-6e1b0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401551373165:android:537b7f8c7bc1a66baf6064",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpcCo61N_E3wcpD8gpTFLVCykYFO1E_Uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401551373165:android:c8fae17a59952876af6064",
+        "android_client_info": {
+          "package_name": "com.smartroad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpcCo61N_E3wcpD8gpTFLVCykYFO1E_Uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
