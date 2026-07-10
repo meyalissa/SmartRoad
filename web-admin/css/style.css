@@ -240,7 +240,57 @@ body {
 }
 .btn-icon.view { color: var(--primary-yellow); }
 .btn-icon.delete:hover { color: var(--danger); }
+.btn-warning {
+    background: var(--primary-yellow);
+    color: var(--bg-dark);
+}
 
+.btn-warning:hover {
+    background: #e0af1f;
+}
+
+.btn-success {
+    background: var(--success);
+    color: var(--bg-dark);
+}
+
+.btn-success:hover {
+    opacity: 0.9;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    background: var(--surface);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    padding: 10px 16px;
+
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background: var(--primary-yellow);
+    color: var(--bg-dark);
+    border-color: var(--primary-yellow);
+    transform: translateY(-1px);
+}
+
+.back-btn i {
+    font-size: 16px;
+}
+#investigateBtn{
+    margin-right: 24px;
+}
 /* ============================================================
    TABLE
    ============================================================ */
