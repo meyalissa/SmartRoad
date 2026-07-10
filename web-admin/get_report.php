@@ -1,12 +1,4 @@
 <?php
-/* ============================================================
-   GET /get_report.php
-   Returns every hazard report, joined with the reporting user's
-   name, shaped exactly like the mock objects the front-end
-   used to use — so manage-report.php's JS didn't need to change
-   its filtering/sorting/pagination logic at all.
-   ============================================================ */
-
 require_once __DIR__ . '/db.php';
 require_once 'auth.php';
 

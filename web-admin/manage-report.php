@@ -25,7 +25,6 @@
       <div class="filter-bar">
         <input class="input" type="text" id="searchInput" placeholder="Search by user or description...">
 
-        <!-- values match the hazard_type ENUM in the database exactly -->
         <select class="select" id="hazardFilter">
           <option value="">All hazard types</option>
           <option value="Pothole">Pothole</option>
@@ -36,7 +35,6 @@
           <option value="Broken Traffic Light">Broken Traffic Light</option>
         </select>
 
-        <!-- values match the status ENUM in the database exactly -->
         <select class="select" id="statusFilter">
           <option value="">All statuses</option>
           <option value="New">New</option>
@@ -52,7 +50,6 @@
         </select>
       </div>
 
-      <!-- ============ TABLE ============ -->
       <table class="table" id="reportsTable">
         <thead>
           <tr>
@@ -65,24 +62,20 @@
           </tr>
         </thead>
         <tbody id="reportsBody">
-          <!-- rows injected by JS -->
         </tbody>
       </table>
 
-      <!-- ============ EMPTY STATE (also used for load errors) ============ -->
       <div class="empty-state" id="emptyState" style="display:none">
         <i class="ti ti-search-off icon" aria-hidden="true"></i>
         <span id="emptyStateText">No reports found for these filters.</span>
       </div>
 
-      <!-- ============ PAGINATION ============ -->
       <div class="pagination" id="pagination"></div>
 
     </div>
   </main>
 </div>
 
-<!-- ============ DELETE CONFIRM MODAL ============ -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal">
     <div class="modal-title">Delete this report?</div>
@@ -95,9 +88,6 @@
 </div>
 
 <script>
-/* ============================================================
-   REAL DATA — loaded from the database via api/get_reports.php
-   ============================================================ */
 let reports = [];
 
 async function loadReports() {
@@ -240,7 +230,6 @@ function viewReport(id) {
   window.location.href = `report-details.php?id=${id}`;
 }
 
-/* ============ DELETE (real DB call) ============ */
 function openDeleteModal(id) {
   pendingDeleteId = id;
   deleteModal.classList.add('show');
