@@ -31,7 +31,7 @@
         <main class="page-content">
 
             <div style="margin-bottom:20px;">
-                <button class="btn" onclick="history.back()">
+                <button class="back-btn" onclick="history.back()">
                     <i class="ti ti-arrow-left"></i>
                     Back
                 </button>
