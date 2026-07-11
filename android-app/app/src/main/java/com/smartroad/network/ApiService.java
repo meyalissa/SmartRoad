@@ -21,16 +21,17 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     @FormUrlEncoded
-    @POST("login")
+    @POST("login.php")
     Call<LoginResponse> login(@Field("username") String username,
                               @Field("password") String password);
 
-    @GET("hazards")
+    @GET("get_hazards.php")
     Call<List<Hazard>> getHazards();
 
     @Multipart
-    @POST("report")
+    @POST("report_hazard.php")
     Call<ReportResponse> submitHazard(
+            @Part("user_id") RequestBody userId,
             @Part("hazard_type") RequestBody hazardType,
             @Part("description") RequestBody description,
             @Part("latitude") RequestBody latitude,

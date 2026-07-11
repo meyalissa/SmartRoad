@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -90,6 +91,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     private void loadHazards() {
         viewModel.getHazards().observe(getViewLifecycleOwner(), hazards -> {
             if (googleMap == null || binding == null) return;
+            if (hazards == null) {
+                Toast.makeText(getContext(),
+                        "Unable to load hazard reports. Please check your connection.",
+                        Toast.LENGTH_SHORT).show();
+            }
             googleMap.clear();
             markerHazardMap.clear();
             boolean isEmpty = hazards == null || hazards.isEmpty();
@@ -97,10 +103,13 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
             if (isEmpty) return;
             for (Hazard h : hazards) {
                 LatLng pos = new LatLng(h.getLatitudeAsDouble(), h.getLongitudeAsDouble());
+                String snippet = "Status: " + h.getStatus()
+                        + "\n" + h.getDescription()
+                        + "\nReported: " + h.getDatetime();
                 Marker marker = googleMap.addMarker(new MarkerOptions()
                         .position(pos)
                         .title(h.getType())
-                        .snippet(h.getStatus())
+                        .snippet(snippet)
                         .icon(BitmapDescriptorFactory.defaultMarker(
                                 MarkerColorUtil.hueFor(h.getType()))));
                 if (marker != null) markerHazardMap.put(marker, h);

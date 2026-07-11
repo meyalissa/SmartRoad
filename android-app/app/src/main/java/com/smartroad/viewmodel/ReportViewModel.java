@@ -12,9 +12,9 @@ public class ReportViewModel extends ViewModel {
 
     private final HazardRepository repository = new HazardRepository();
 
-    public LiveData<ReportResponse> submit(String type, String description,
+    public LiveData<ReportResponse> submit(String userId, String type, String description,
                                            String lat, String lng,
                                            String datetime, File photo) {
-        return repository.submitHazard(type, description, lat, lng, datetime, photo);
+        return repository.submitHazard(userId, type, description, lat, lng, datetime, photo);
     }
 }

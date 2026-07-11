@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,12 +20,14 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.smartroad.R;
 import com.smartroad.databinding.FragmentHomeBinding;
 import com.smartroad.model.Hazard;
 import com.smartroad.util.LocationHelper;
+import com.smartroad.util.MarkerColorUtil;
 import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.HomeViewModel;
 
@@ -39,6 +42,8 @@ public class HomeFragment extends Fragment {
     private HomeViewModel viewModel;
     private LocationHelper locationHelper;
     private GoogleMap previewMap;
+    private LatLng cachedUserLocation;
+    private List<Hazard> cachedHazards;
 
     private final Handler clockHandler = new Handler(Looper.getMainLooper());
     private Runnable clockRunnable;
@@ -77,7 +82,10 @@ public class HomeFragment extends Fragment {
 
         // Lite-mode map preview lifecycle
         binding.mapPreview.onCreate(savedInstanceState);
-        binding.mapPreview.getMapAsync(map -> previewMap = map);
+        binding.mapPreview.getMapAsync(map -> {
+            previewMap = map;
+            refreshPreviewMap();
+        });
 
         startClock();
         loadStats();
@@ -104,6 +112,11 @@ public class HomeFragment extends Fragment {
 
     private void loadStats() {
         viewModel.loadHazards().observe(getViewLifecycleOwner(), hazards -> {
+            if (hazards == null) {
+                Toast.makeText(getContext(),
+                        "Unable to load hazard reports. Please check your connection.",
+                        Toast.LENGTH_SHORT).show();
+            }
             int total = 0, resolved = 0;
             if (hazards != null) {
                 total = hazards.size();
@@ -114,7 +127,53 @@ public class HomeFragment extends Fragment {
             binding.statTotal.tvStatValue.setText(String.valueOf(total));
             binding.statResolved.tvStatValue.setText(String.valueOf(resolved));
             binding.statPending.tvStatValue.setText(String.valueOf(total - resolved));
+
+            cachedHazards = hazards;
+            refreshPreviewMap();
         });
+    }
+
+    /** Redraws the "You are here" marker plus every hazard marker on the lite-mode preview map. */
+    private void refreshPreviewMap() {
+        if (previewMap == null) return;
+        previewMap.clear();
+
+        com.google.android.gms.maps.model.LatLngBounds.Builder bounds =
+                new com.google.android.gms.maps.model.LatLngBounds.Builder();
+        boolean hasAny = false;
+
+        if (cachedUserLocation != null) {
+            previewMap.addMarker(new MarkerOptions().position(cachedUserLocation).title("You"));
+            bounds.include(cachedUserLocation);
+            hasAny = true;
+        }
+
+        if (cachedHazards != null) {
+            for (Hazard h : cachedHazards) {
+                LatLng pos = new LatLng(h.getLatitudeAsDouble(), h.getLongitudeAsDouble());
+                previewMap.addMarker(new MarkerOptions()
+                        .position(pos)
+                        .title(h.getType())
+                        .snippet(h.getStatus())
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                MarkerColorUtil.hueFor(h.getType()))));
+                bounds.include(pos);
+                hasAny = true;
+            }
+        }
+
+        if (!hasAny) return;
+        // Fit the camera to every marker rather than a fixed zoom, since hazard
+        // reports and the user's own location can be many km apart; falls back
+        // to a simple zoom on the user if bounds can't be computed yet (the
+        // lite-mode MapView may not have finished laying out).
+        try {
+            previewMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 80));
+        } catch (Exception e) {
+            if (cachedUserLocation != null) {
+                previewMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cachedUserLocation, 12f));
+            }
+        }
     }
 
     private void requestLocation() {
@@ -142,12 +201,8 @@ public class HomeFragment extends Fragment {
                         getString(R.string.latitude_label), lat));
                 binding.tvLongitude.setText(String.format(Locale.US, "%s: %.5f",
                         getString(R.string.longitude_label), lng));
-                if (previewMap != null) {
-                    LatLng pos = new LatLng(lat, lng);
-                    previewMap.clear();
-                    previewMap.addMarker(new MarkerOptions().position(pos).title("You"));
-                    previewMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f));
-                }
+                cachedUserLocation = new LatLng(lat, lng);
+                refreshPreviewMap();
             }
 
             @Override

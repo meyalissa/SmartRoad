@@ -18,12 +18,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.smartroad.R;
 import com.smartroad.databinding.FragmentReportBinding;
 import com.smartroad.util.LocationHelper;
+import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.ReportViewModel;
 
 import java.io.File;
@@ -196,10 +198,11 @@ public class ReportFragment extends Fragment {
         binding.tilDescription.setError(null);
 
         String datetime = dateString + " " + timeString;
+        String userId = new SessionManager(requireContext()).getUserId();
         binding.btnSubmit.setEnabled(false);
         showLoading();
 
-        viewModel.submit(type, desc,
+        viewModel.submit(userId, type, desc,
                 String.valueOf(latitude), String.valueOf(longitude),
                 datetime, photoFile)
                 .observe(getViewLifecycleOwner(), response -> {
@@ -208,8 +211,10 @@ public class ReportFragment extends Fragment {
                     if (response != null && response.isSuccess()) {
                         showSuccessDialog();
                     } else {
-                        Toast.makeText(getContext(),
-                                "Submission failed. Please try again.", Toast.LENGTH_SHORT).show();
+                        String message = (response != null && response.getMessage() != null)
+                                ? response.getMessage()
+                                : "Submission failed. Please check your connection and try again.";
+                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -233,7 +238,14 @@ public class ReportFragment extends Fragment {
                 .inflate(R.layout.dialog_success, null);
         new MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
-                .setPositiveButton(R.string.action_ok, (d, w) -> resetForm())
+                .setPositiveButton(R.string.action_ok, (d, w) -> {
+                    resetForm();
+                    if (binding != null) {
+                        // Home reloads its stats/map fresh on every view creation,
+                        // so navigating back there is enough to reflect the new report.
+                        Navigation.findNavController(binding.getRoot()).navigate(R.id.homeFragment);
+                    }
+                })
                 .show();
     }
 

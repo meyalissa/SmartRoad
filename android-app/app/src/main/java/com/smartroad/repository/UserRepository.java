@@ -4,11 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.gson.Gson;
 import com.smartroad.model.LoginResponse;
 import com.smartroad.model.ProfileResponse;
 import com.smartroad.network.ApiClient;
 import com.smartroad.network.ApiService;
 
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,36 +22,46 @@ public class UserRepository {
     private final ApiService api = ApiClient.getApiService();
 
     public LiveData<LoginResponse> login(String username, String password) {
+        // Login always hits the real API now, regardless of DEMO_MODE — every
+        // other feature (hazards, report submit, profile) still respects it.
         final MutableLiveData<LoginResponse> result = new MutableLiveData<>();
-
-        if (ApiClient.DEMO_MODE) {
-            // Demo: accept any non-empty credentials.
-            LoginResponse demo = new LoginResponse();
-            demo.setStatus("success");
-            demo.setId("1");
-            demo.setUsername(username);
-            demo.setFullname(prettyName(username));
-            result.setValue(demo);
-            return result;
-        }
 
         api.login(username, password).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call,
                                    @NonNull Response<LoginResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     result.setValue(response.body());
-                } else {
-                    result.setValue(failed("Server error: " + response.code()));
+                    return;
                 }
+                // Non-2xx (400/401/500 from login.php) — the JSON error body
+                // lands in errorBody(), not body(), so it must be parsed manually.
+                LoginResponse parsedError = parseErrorBody(response.errorBody());
+                result.setValue(parsedError != null
+                        ? parsedError
+                        : failed("Server error (" + response.code() + "). Please try again."));
             }
 
             @Override
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
-                result.setValue(failed(t.getMessage()));
+                // Covers: no network, server unreachable, timeout, and malformed/
+                // non-JSON responses (Gson conversion failures land here too).
+                String message = (t instanceof IOException)
+                        ? "Cannot reach the server. Check your connection and try again."
+                        : "Unexpected error. Please try again.";
+                result.setValue(failed(message));
             }
         });
         return result;
+    }
+
+    private LoginResponse parseErrorBody(ResponseBody errorBody) {
+        if (errorBody == null) return null;
+        try {
+            return new Gson().fromJson(errorBody.charStream(), LoginResponse.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public LiveData<ProfileResponse> getProfile(String userId, String cachedName, String cachedUsername) {
@@ -84,11 +98,5 @@ public class UserRepository {
         r.setStatus("error");
         r.setMessage(message);
         return r;
-    }
-
-    private String prettyName(String username) {
-        if (username == null || username.trim().isEmpty()) return "SmartRoad User";
-        String u = username.trim();
-        return Character.toUpperCase(u.charAt(0)) + u.substring(1);
     }
 }
