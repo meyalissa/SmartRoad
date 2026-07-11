@@ -18,7 +18,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.smartroad.R;
 import com.smartroad.databinding.FragmentProfileBinding;
+import com.smartroad.ui.about.AboutActivity;
 import com.smartroad.ui.auth.LoginActivity;
+import com.smartroad.ui.myreports.MyReportsActivity;
 import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.ProfileViewModel;
 
@@ -90,8 +92,14 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
+        binding.btnMyReports.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), MyReportsActivity.class)));
+
         binding.btnEditProfile.setOnClickListener(v ->
                 Toast.makeText(getContext(), "Edit profile coming soon", Toast.LENGTH_SHORT).show());
+
+        binding.btnAbout.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), AboutActivity.class)));
 
         binding.btnLogout.setOnClickListener(v -> confirmLogout());
     }

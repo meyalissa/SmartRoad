@@ -58,9 +58,23 @@
             android:parentActivityName=".ui.main.MainActivity" />
 
         <activity
+            android:name=".ui.myreports.MyReportsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity" />
+
+        <activity
             android:name=".ui.about.AboutActivity"
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity" />
+
+        <!-- FCM structure scaffold (token capture only, no notifications shown yet) -->
+        <service
+            android:name=".notifications.SmartRoadFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <!-- FileProvider for camera capture -->
         <provider

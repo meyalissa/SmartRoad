@@ -1,6 +1,5 @@
 package com.smartroad.ui.detail;
 
-import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,6 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.smartroad.R;
 import com.smartroad.databinding.ActivityHazardDetailBinding;
 import com.smartroad.model.Hazard;
@@ -21,6 +24,7 @@ public class HazardDetailActivity extends AppCompatActivity {
     public static final String EXTRA_HAZARD = "extra_hazard";
 
     private ActivityHazardDetailBinding binding;
+    private Hazard hazard;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +34,7 @@ public class HazardDetailActivity extends AppCompatActivity {
 
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
-        Hazard hazard = (Hazard) getIntent().getSerializableExtra(EXTRA_HAZARD);
+        hazard = (Hazard) getIntent().getSerializableExtra(EXTRA_HAZARD);
         if (hazard == null) { finish(); return; }
 
         binding.tvDetailType.setText(hazard.getType());
@@ -58,11 +62,48 @@ public class HazardDetailActivity extends AppCompatActivity {
                     .placeholder(R.drawable.ic_gallery)
                     .into(binding.ivHazardPhoto);
         }
+
+        binding.mapDetail.onCreate(savedInstanceState);
+        binding.mapDetail.getMapAsync(map -> {
+            LatLng pos = new LatLng(hazard.getLatitudeAsDouble(), hazard.getLongitudeAsDouble());
+            map.addMarker(new MarkerOptions()
+                    .position(pos)
+                    .title(hazard.getType())
+                    .icon(BitmapDescriptorFactory.defaultMarker(
+                            MarkerColorUtil.hueForStatus(hazard.getStatus()))));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f));
+        });
     }
 
     private void bindRow(com.smartroad.databinding.ItemDetailRowBinding row,
                          String label, String value) {
         row.tvRowLabel.setText(label);
         row.tvRowValue.setText(value);
+    }
+
+    // ----- MapView lifecycle forwarding -----
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (binding != null) binding.mapDetail.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (binding != null) binding.mapDetail.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (binding != null) binding.mapDetail.onLowMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (binding != null) binding.mapDetail.onDestroy();
+        binding = null;
+        super.onDestroy();
     }
 }

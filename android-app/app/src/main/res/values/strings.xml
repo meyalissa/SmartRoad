@@ -66,6 +66,9 @@
     <string name="joined_on">Joined %1$s</string>
     <string name="action_edit_profile">Edit Profile</string>
     <string name="action_logout">Logout</string>
+    <string name="my_reports">My Reports</string>
+    <string name="no_reports_yet">You haven\'t submitted any reports yet</string>
+    <string name="error_loading_reports">Unable to load your reports. Please check your connection.</string>
 
     <!-- About -->
     <string name="about">About</string>

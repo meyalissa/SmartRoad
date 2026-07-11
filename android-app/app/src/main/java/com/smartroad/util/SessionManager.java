@@ -11,6 +11,7 @@ public class SessionManager {
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_FULLNAME = "fullname";
     private static final String KEY_USERNAME = "username";
+    private static final String KEY_FCM_TOKEN = "fcm_token";
 
     private final SharedPreferences prefs;
 
@@ -39,4 +40,8 @@ public class SessionManager {
     public void logout() {
         prefs.edit().clear().apply();
     }
+
+    // ---- FCM token (structure only — not yet uploaded to the backend) ----
+    public void saveFcmToken(String token) { prefs.edit().putString(KEY_FCM_TOKEN, token).apply(); }
+    public String getFcmToken() { return prefs.getString(KEY_FCM_TOKEN, ""); }
 }

@@ -156,7 +156,7 @@ public class HomeFragment extends Fragment {
                         .title(h.getType())
                         .snippet(h.getStatus())
                         .icon(BitmapDescriptorFactory.defaultMarker(
-                                MarkerColorUtil.hueFor(h.getType()))));
+                                MarkerColorUtil.hueForStatus(h.getStatus()))));
                 bounds.include(pos);
                 hasAny = true;
             }

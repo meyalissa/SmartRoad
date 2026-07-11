@@ -54,6 +54,25 @@ public class HazardRepository {
         return result;
     }
 
+    public LiveData<List<Hazard>> getMyReports(String userId) {
+        final MutableLiveData<List<Hazard>> result = new MutableLiveData<>();
+
+        api.getMyReports(userId).enqueue(new Callback<List<Hazard>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Hazard>> call,
+                                   @NonNull Response<List<Hazard>> response) {
+                result.setValue(response.isSuccessful() && response.body() != null
+                        ? response.body() : null);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Hazard>> call, @NonNull Throwable t) {
+                result.setValue(null);
+            }
+        });
+        return result;
+    }
+
     private static final int MAX_UPLOAD_RETRIES = 2;
     private static final long RETRY_DELAY_MS = 1500L;
     private static final int MAX_PHOTO_DIMENSION = 1280;

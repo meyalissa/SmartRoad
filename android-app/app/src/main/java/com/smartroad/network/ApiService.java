@@ -28,6 +28,9 @@ public interface ApiService {
     @GET("get_hazards.php")
     Call<List<Hazard>> getHazards();
 
+    @GET("my_reports.php")
+    Call<List<Hazard>> getMyReports(@Query("user_id") String userId);
+
     @Multipart
     @POST("report_hazard.php")
     Call<ReportResponse> submitHazard(

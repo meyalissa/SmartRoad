@@ -123,13 +123,30 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEditProfile"
+            android:id="@+id/btnMyReports"
             style="@style/Widget.SmartRoad.Button.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_xl"
+            app:icon="@drawable/ic_report"
+            android:text="@string/my_reports" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditProfile"
+            style="@style/Widget.SmartRoad.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
             app:icon="@drawable/ic_profile"
             android:text="@string/action_edit_profile" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAbout"
+            style="@style/Widget.SmartRoad.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:text="@string/about" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogout"

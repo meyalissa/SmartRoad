@@ -111,7 +111,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
                         .title(h.getType())
                         .snippet(snippet)
                         .icon(BitmapDescriptorFactory.defaultMarker(
-                                MarkerColorUtil.hueFor(h.getType()))));
+                                MarkerColorUtil.hueForStatus(h.getStatus()))));
                 if (marker != null) markerHazardMap.put(marker, h);
             }
         });
