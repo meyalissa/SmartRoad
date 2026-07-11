@@ -39,6 +39,6 @@ public interface ApiService {
             @Part("datetime") RequestBody datetime,
             @Part MultipartBody.Part photo);
 
-    @GET("profile")
-    Call<ProfileResponse> getProfile(@Query("id") String userId);
+    @GET("profile.php")
+    Call<ProfileResponse> getProfile(@Query("user_id") String userId);
 }

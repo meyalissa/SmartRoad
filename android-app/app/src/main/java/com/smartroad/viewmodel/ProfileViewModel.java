@@ -10,7 +10,7 @@ public class ProfileViewModel extends ViewModel {
 
     private final UserRepository repository = new UserRepository();
 
-    public LiveData<ProfileResponse> loadProfile(String userId, String name, String username) {
-        return repository.getProfile(userId, name, username);
+    public LiveData<ProfileResponse> loadProfile(String userId) {
+        return repository.getProfile(userId);
     }
 }

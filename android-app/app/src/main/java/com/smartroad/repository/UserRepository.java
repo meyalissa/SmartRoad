@@ -64,33 +64,40 @@ public class UserRepository {
         }
     }
 
-    public LiveData<ProfileResponse> getProfile(String userId, String cachedName, String cachedUsername) {
+    public LiveData<ProfileResponse> getProfile(String userId) {
+        // Profile now always hits the real API too — DEMO_MODE has no
+        // remaining callers, every module has live backend support.
         final MutableLiveData<ProfileResponse> result = new MutableLiveData<>();
-
-        if (ApiClient.DEMO_MODE) {
-            ProfileResponse demo = new ProfileResponse();
-            demo.setFullname(cachedName);
-            demo.setUsername(cachedUsername);
-            demo.setTotalReports(15);
-            demo.setResolvedReports(12);
-            demo.setPendingReports(3);
-            result.setValue(demo);
-            return result;
-        }
 
         api.getProfile(userId).enqueue(new Callback<ProfileResponse>() {
             @Override
             public void onResponse(@NonNull Call<ProfileResponse> call,
                                    @NonNull Response<ProfileResponse> response) {
-                result.setValue(response.isSuccessful() ? response.body() : null);
+                if (response.isSuccessful() && response.body() != null) {
+                    result.setValue(response.body());
+                    return;
+                }
+                ProfileResponse parsedError = parseProfileErrorBody(response.errorBody());
+                result.setValue(parsedError);
             }
 
             @Override
             public void onFailure(@NonNull Call<ProfileResponse> call, @NonNull Throwable t) {
-                result.setValue(null);
+                ProfileResponse error = new ProfileResponse();
+                error.setStatus("error");
+                result.setValue(error);
             }
         });
         return result;
+    }
+
+    private ProfileResponse parseProfileErrorBody(ResponseBody errorBody) {
+        if (errorBody == null) return null;
+        try {
+            return new Gson().fromJson(errorBody.charStream(), ProfileResponse.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private LoginResponse failed(String message) {

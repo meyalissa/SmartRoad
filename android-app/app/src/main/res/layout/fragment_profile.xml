@@ -68,6 +68,22 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
+        <TextView
+            android:id="@+id/tvProfileEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvProfileJoinDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="13sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,7 +98,7 @@
                 android:layout_weight="1" />
 
             <include
-                android:id="@+id/profileResolved"
+                android:id="@+id/profilePending"
                 layout="@layout/item_stat"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -90,7 +106,15 @@
                 android:layout_weight="1" />
 
             <include
-                android:id="@+id/profilePending"
+                android:id="@+id/profileInvestigating"
+                layout="@layout/item_stat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_sm"
+                android:layout_weight="1" />
+
+            <include
+                android:id="@+id/profileResolved"
                 layout="@layout/item_stat"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

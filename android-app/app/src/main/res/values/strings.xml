@@ -62,6 +62,8 @@
     <string name="total_reports">Total Reports</string>
     <string name="reports_resolved">Resolved</string>
     <string name="reports_pending">Pending</string>
+    <string name="reports_investigating">Investigating</string>
+    <string name="joined_on">Joined %1$s</string>
     <string name="action_edit_profile">Edit Profile</string>
     <string name="action_logout">Logout</string>
 

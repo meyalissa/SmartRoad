@@ -43,27 +43,49 @@ public class ProfileFragment extends Fragment {
         session = new SessionManager(requireContext());
 
         binding.profileTotal.tvStatLabel.setText(R.string.total_reports);
-        binding.profileResolved.tvStatLabel.setText(R.string.reports_resolved);
         binding.profilePending.tvStatLabel.setText(R.string.reports_pending);
+        binding.profileInvestigating.tvStatLabel.setText(R.string.reports_investigating);
+        binding.profileResolved.tvStatLabel.setText(R.string.reports_resolved);
 
         binding.tvProfileName.setText(session.getFullName());
         binding.tvProfileUsername.setText("@" + session.getUsername());
         binding.tvAppVersion.setText(getString(R.string.version_label, appVersionName()));
 
-        viewModel.loadProfile(session.getUserId(), session.getFullName(), session.getUsername())
+        viewModel.loadProfile(session.getUserId())
                 .observe(getViewLifecycleOwner(), profile -> {
-                    if (profile == null || binding == null) return;
+                    if (binding == null) return;
+                    if (profile == null || !profile.isSuccess()) {
+                        String message = (profile != null && !TextUtils.isEmpty(profile.getMessage()))
+                                ? profile.getMessage()
+                                : "Unable to load profile. Please check your connection.";
+                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if (!TextUtils.isEmpty(profile.getFullname()))
                         binding.tvProfileName.setText(profile.getFullname());
                     if (!TextUtils.isEmpty(profile.getUsername()))
                         binding.tvProfileUsername.setText("@" + profile.getUsername());
+                    binding.tvProfileEmail.setText(profile.getEmail());
+                    binding.tvProfileEmail.setVisibility(
+                            TextUtils.isEmpty(profile.getEmail()) ? View.GONE : View.VISIBLE);
+                    if (!TextUtils.isEmpty(profile.getJoinDate())) {
+                        binding.tvProfileJoinDate.setText(getString(R.string.joined_on, profile.getJoinDate()));
+                        binding.tvProfileJoinDate.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.tvProfileJoinDate.setVisibility(View.GONE);
+                    }
                     binding.profileTotal.tvStatValue.setText(String.valueOf(profile.getTotalReports()));
-                    binding.profileResolved.tvStatValue.setText(String.valueOf(profile.getResolvedReports()));
                     binding.profilePending.tvStatValue.setText(String.valueOf(profile.getPendingReports()));
-                    if (!TextUtils.isEmpty(profile.getPhotoUrl())) {
+                    binding.profileInvestigating.tvStatValue.setText(String.valueOf(profile.getInvestigatingReports()));
+                    binding.profileResolved.tvStatValue.setText(String.valueOf(profile.getResolvedReports()));
+                    if (TextUtils.isEmpty(profile.getPhotoUrl())) {
+                        binding.ivProfilePhoto.setImageResource(R.drawable.ic_profile);
+                    } else {
+                        // Falls back to the default avatar if the URL fails to load.
                         Glide.with(this).load(profile.getPhotoUrl())
                                 .circleCrop()
                                 .placeholder(R.drawable.ic_profile)
+                                .error(R.drawable.ic_profile)
                                 .into(binding.ivProfilePhoto);
                     }
                 });

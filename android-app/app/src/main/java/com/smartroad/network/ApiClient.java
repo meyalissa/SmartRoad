@@ -20,10 +20,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *                a physical device on the same Wi-Fi must use the dev
  *                machine's LAN IP instead — update DEVICE_LAN_IP below if
  *                your network changes.
- *   - DEMO_MODE: when true, the app uses built-in sample data so it is fully
- *                demonstrable WITHOUT a live server. Login, hazard retrieval,
- *                and report submission now always call the real API
- *                regardless of this flag; only profile still respects it.
+ *   - DEMO_MODE: legacy offline-demo flag. Every module (login, hazards,
+ *                report submission, profile) now always calls the real API
+ *                regardless of this flag — kept in place only as a single
+ *                kill switch should a future module need to fall back to
+ *                sample data before its backend is ready.
  */
 public class ApiClient {
 
@@ -35,8 +36,7 @@ public class ApiClient {
 
     public static final String BASE_URL = isEmulator() ? EMULATOR_BASE_URL : DEVICE_BASE_URL;
 
-    // TODO: set false when the rest of the backend (profile) is live.
-    public static final boolean DEMO_MODE = true;
+    public static final boolean DEMO_MODE = false;
 
     private static Retrofit retrofit;
 
