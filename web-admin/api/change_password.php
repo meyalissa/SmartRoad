@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $userId          = isset($_POST['user_id']) ? trim($_POST['user_id']) : '';
-$currentPassword = isset($_POST['current_password']) ? (string) $_POST['current_password'] : '';
-$newPassword     = isset($_POST['new_password']) ? (string) $_POST['new_password'] : '';
-$confirmPassword = isset($_POST['confirm_password']) ? (string) $_POST['confirm_password'] : '';
+$currentPassword = isset($_POST['current_password']) ? trim($_POST['current_password']) : '';
+$newPassword     = isset($_POST['new_password']) ? trim($_POST['new_password']) : '';
+$confirmPassword = isset($_POST['confirm_password']) ? trim($_POST['confirm_password']) : '';
 
 if ($userId === '' || $currentPassword === '' || $newPassword === '' || $confirmPassword === '') {
     apiRespond(400, 'error', ['message' => 'All fields are required.']);
@@ -42,6 +42,9 @@ try {
     }
     if (!password_verify($currentPassword, $user['password'])) {
         apiRespond(401, 'error', ['message' => 'Current password is incorrect.']);
+    }
+    if (password_verify($newPassword, $user['password'])) {
+        apiRespond(400, 'error', ['message' => 'New password must be different from the current password.']);
     }
 
     $newHash = password_hash($newPassword, PASSWORD_DEFAULT);

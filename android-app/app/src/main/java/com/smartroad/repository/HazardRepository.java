@@ -69,6 +69,23 @@ public class HazardRepository {
         return result;
     }
 
+    public LiveData<Hazard> getReportDetails(String id) {
+        final MutableLiveData<Hazard> result = new MutableLiveData<>();
+
+        api.getReportDetails(id).enqueue(new Callback<Hazard>() {
+            @Override
+            public void onResponse(@NonNull Call<Hazard> call, @NonNull Response<Hazard> response) {
+                result.setValue(response.isSuccessful() ? response.body() : null);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Hazard> call, @NonNull Throwable t) {
+                result.setValue(null);
+            }
+        });
+        return result;
+    }
+
     private static final int MAX_UPLOAD_RETRIES = 2;
     private static final long RETRY_DELAY_MS = 1500L;
 

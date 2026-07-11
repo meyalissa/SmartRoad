@@ -2,10 +2,8 @@
 <resources>
     <!-- ============================================================
          CENTRALIZED COLOR SYSTEM
-         Brand source of truth = config/BrandColors.java
-         These XML values mirror BrandColors so layouts/themes
-         can reference them. Change branding in ONE place:
-         edit BrandColors.java AND these few brand colors below.
+         Status colors mirror config/BrandColors.java so Java code and
+         XML layouts/themes stay in sync from one source of truth.
          ============================================================ -->
 
     <!-- Primary Brand -->
@@ -18,31 +16,18 @@
     <color name="backgroundColor">#FFFFFF</color>       <!-- Main yellow background -->
     <color name="surfaceColor">#FFFFFF</color>          <!-- Card background -->
 
-
     <!-- Text -->
     <color name="textPrimaryColor">#2E2E2E</color>
     <color name="textSecondaryColor">#6B5A3A</color>
 
-    <!-- Status / semantic -->
-    <color name="successColor">#2E7D32</color>
-    <color name="warningColor">#F9A825</color>
     <color name="errorColor">#C62828</color>
 
     <!-- On-brand text -->
     <color name="onPrimaryColor">#FFFFFF</color>
     <color name="onSecondaryColor">#FFFFFF</color>
 
-    <!-- Hazard marker colors -->
-    <color name="mapMarkerPothole">#E53935</color>      <!-- Red -->
-    <color name="mapMarkerFlood">#1E88E5</color>        <!-- Blue -->
-    <color name="mapMarkerAccident">#FB8C00</color>     <!-- Orange -->
-    <color name="mapMarkerTree">#43A047</color>         <!-- Green -->
-    <color name="mapMarkerRoadSign">#8E24AA</color>     <!-- Purple -->
-    <color name="mapMarkerTrafficLight">#FDD835</color> <!-- Yellow -->
-
-    <!-- Status Badge -->
+    <!-- Status Badge / marker (New/Investigating/Resolved) -->
     <color name="statusNew">#1E88E5</color>
-    <color name="statusInvestigation">#F9A825</color>
     <color name="statusResolved">#43A047</color>
 
     <!-- Launcher -->

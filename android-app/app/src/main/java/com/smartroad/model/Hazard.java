@@ -25,6 +25,8 @@ public class Hazard implements Serializable {
     private String photoUrl;
     @SerializedName("reporter")
     private String reporter;
+    @SerializedName("maintenance")
+    private Maintenance maintenance;
 
     public Hazard() { }
 
@@ -37,6 +39,7 @@ public class Hazard implements Serializable {
     public String getReporter() { return reporter; }
     public String getLatitude() { return latitude; }
     public String getLongitude() { return longitude; }
+    public Maintenance getMaintenance() { return maintenance; }
 
     public double getLatitudeAsDouble() {
         try { return Double.parseDouble(latitude); } catch (Exception e) { return 0d; }

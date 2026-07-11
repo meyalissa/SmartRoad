@@ -15,7 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -24,14 +23,13 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.smartroad.R;
 import com.smartroad.databinding.FragmentReportBinding;
+import com.smartroad.util.LoadingDialogHelper;
 import com.smartroad.util.LocationHelper;
+import com.smartroad.util.PhotoPickerHelper;
 import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.ReportViewModel;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -41,17 +39,15 @@ public class ReportFragment extends Fragment {
     private FragmentReportBinding binding;
     private ReportViewModel viewModel;
     private LocationHelper locationHelper;
+    private PhotoPickerHelper photoPickerHelper;
 
     private double latitude = 0d, longitude = 0d;
     private String dateString = "", timeString = "";
     private File photoFile;
-    private Uri cameraUri;
     private AlertDialog loadingDialog;
 
     private ActivityResultLauncher<String[]> locationPermissionLauncher;
     private ActivityResultLauncher<String> cameraPermissionLauncher;
-    private ActivityResultLauncher<Uri> takePictureLauncher;
-    private ActivityResultLauncher<String> pickImageLauncher;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,27 +59,14 @@ public class ReportFragment extends Fragment {
 
         cameraPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
-                granted -> { if (granted) launchCamera(); else
+                granted -> { if (granted) photoPickerHelper.launchCamera(requireContext()); else
                         Toast.makeText(getContext(), R.string.permission_camera_rationale,
                                 Toast.LENGTH_SHORT).show(); });
 
-        takePictureLauncher = registerForActivityResult(
-                new ActivityResultContracts.TakePicture(),
-                success -> {
-                    if (success && cameraUri != null) {
-                        photoFile = uriToCacheFile(cameraUri, "camera_" + System.currentTimeMillis() + ".jpg");
-                        showPreview(cameraUri);
-                    }
-                });
-
-        pickImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.GetContent(),
-                uri -> {
-                    if (uri != null) {
-                        photoFile = uriToCacheFile(uri, "gallery_" + System.currentTimeMillis() + ".jpg");
-                        showPreview(uri);
-                    }
-                });
+        photoPickerHelper = new PhotoPickerHelper(this, requireContext(), (file, previewUri) -> {
+            photoFile = file;
+            showPreview(previewUri);
+        });
     }
 
     @Nullable
@@ -109,7 +92,7 @@ public class ReportFragment extends Fragment {
         requestLocation();
 
         binding.btnCamera.setOnClickListener(v -> requestCamera());
-        binding.btnGallery.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
+        binding.btnGallery.setOnClickListener(v -> photoPickerHelper.launchGallery());
         binding.btnSubmit.setOnClickListener(v -> submit());
     }
 
@@ -155,35 +138,9 @@ public class ReportFragment extends Fragment {
         cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
     }
 
-    private void launchCamera() {
-        File file = new File(requireContext().getCacheDir(),
-                "capture_" + System.currentTimeMillis() + ".jpg");
-        cameraUri = FileProvider.getUriForFile(requireContext(),
-                requireContext().getPackageName() + ".fileprovider", file);
-        takePictureLauncher.launch(cameraUri);
-    }
-
     private void showPreview(Uri uri) {
         if (binding == null) return;
         Glide.with(this).load(uri).centerCrop().into(binding.ivPhotoPreview);
-    }
-
-    private File uriToCacheFile(Uri uri, String name) {
-        try {
-            File out = new File(requireContext().getCacheDir(), name);
-            InputStream in = requireContext().getContentResolver().openInputStream(uri);
-            OutputStream os = new FileOutputStream(out);
-            byte[] buf = new byte[4096];
-            int len;
-            if (in != null) {
-                while ((len = in.read(buf)) != -1) os.write(buf, 0, len);
-                in.close();
-            }
-            os.close();
-            return out;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     private void submit() {
@@ -192,7 +149,7 @@ public class ReportFragment extends Fragment {
                 ? "" : binding.etDescription.getText().toString().trim();
 
         if (desc.isEmpty()) {
-            binding.tilDescription.setError("Please describe the hazard");
+            binding.tilDescription.setError(getString(R.string.error_description_required));
             return;
         }
         binding.tilDescription.setError(null);
@@ -200,37 +157,23 @@ public class ReportFragment extends Fragment {
         String datetime = dateString + " " + timeString;
         String userId = new SessionManager(requireContext()).getUserId();
         binding.btnSubmit.setEnabled(false);
-        showLoading();
+        loadingDialog = LoadingDialogHelper.show(requireContext());
 
         viewModel.submit(userId, type, desc,
                 String.valueOf(latitude), String.valueOf(longitude),
                 datetime, photoFile)
                 .observe(getViewLifecycleOwner(), response -> {
-                    hideLoading();
+                    LoadingDialogHelper.hide(loadingDialog);
                     binding.btnSubmit.setEnabled(true);
                     if (response != null && response.isSuccess()) {
                         showSuccessDialog();
                     } else {
                         String message = (response != null && response.getMessage() != null)
                                 ? response.getMessage()
-                                : "Submission failed. Please check your connection and try again.";
+                                : getString(R.string.error_submission_failed);
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void showLoading() {
-        View dialogView = LayoutInflater.from(requireContext())
-                .inflate(R.layout.dialog_loading, null);
-        loadingDialog = new MaterialAlertDialogBuilder(requireContext())
-                .setView(dialogView)
-                .setCancelable(false)
-                .create();
-        loadingDialog.show();
-    }
-
-    private void hideLoading() {
-        if (loadingDialog != null && loadingDialog.isShowing()) loadingDialog.dismiss();
     }
 
     private void showSuccessDialog() {
@@ -255,13 +198,12 @@ public class ReportFragment extends Fragment {
         binding.etDescription.setText("");
         binding.ivPhotoPreview.setImageResource(R.drawable.ic_gallery);
         photoFile = null;
-        cameraUri = null;
         captureDateTime();
     }
 
     @Override
     public void onDestroyView() {
-        hideLoading();
+        LoadingDialogHelper.hide(loadingDialog);
         binding = null;
         super.onDestroyView();
     }

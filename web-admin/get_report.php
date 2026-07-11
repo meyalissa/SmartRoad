@@ -5,6 +5,8 @@ require_once 'auth.php';
 header('Content-Type: application/json');
 
 try {
+    // LEFT JOINed since a report has zero or one maintenance_records row —
+    // the m.* columns come back NULL when none exists yet.
     $stmt = $pdo->query("
         SELECT
             hr.id,
@@ -16,9 +18,14 @@ try {
             hr.status      AS status,
             hr.photo       AS photo,
             hr.description AS description,
-            hr.user_agent  AS user_agent
+            hr.user_agent  AS user_agent,
+            m.maintenance_team  AS maintenance_team,
+            m.maintenance_notes AS maintenance_notes,
+            m.repair_date       AS repair_date,
+            m.completed_date    AS completed_date
         FROM hazard_reports hr
         JOIN users u ON hr.user_id = u.id
+        LEFT JOIN maintenance_records m ON m.hazard_report_id = hr.id
         ORDER BY hr.reported_at DESC
     ");
 

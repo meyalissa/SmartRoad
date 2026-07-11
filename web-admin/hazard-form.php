@@ -12,7 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $longitude   = $_POST['longitude'] ?? '';
     $status      = $_POST['status'] ?? 'New';
 
-    // TODO: Replace with the logged-in user's ID if available.
+    // Hazards added here come from the admin, not a mobile app user, and
+    // hazard_reports.user_id has no "admin-submitted" concept of its own —
+    // attributed to the first seeded mobile user as a placeholder reporter.
     $user_id = 1;
 
     $user_agent = $_SERVER['HTTP_USER_AGENT'];

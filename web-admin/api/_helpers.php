@@ -1,7 +1,10 @@
 <?php
 /**
- * SmartRoad — Shared helpers for the mobile JSON APIs.
- * Included by every file in web-admin/api/.
+ * SmartRoad — Shared helpers and validation constants.
+ * Included by every file in web-admin/api/ (mobile JSON APIs) and also by
+ * the admin-side write endpoints in web-admin/ (edit_report.php,
+ * save_maintenance.php) so validation rules for hazard type/status/images
+ * only live in one place.
  */
 
 // Hosts the Android app is actually configured to call (see
@@ -35,6 +38,16 @@ const ALLOWED_IMAGE_MIME_TO_EXT = [
     'image/png'  => 'png',
     'image/webp' => 'webp',
 ];
+
+// Must match the hazard_type / status ENUMs in hazard_reports (see database.sql).
+const ALLOWED_HAZARD_TYPES = [
+    'Pothole', 'Flood', 'Accident', 'Fallen Tree', 'Damaged Road Sign', 'Broken Traffic Light',
+];
+// Maps legacy/alternate labels from older app builds onto the DB's ENUM values.
+const HAZARD_TYPE_ALIASES = [
+    'Traffic Accident' => 'Accident',
+];
+const ALLOWED_STATUSES = ['New', 'Under Investigation', 'Resolved'];
 
 /**
  * Validates one $_FILES[...] entry as a real image (content-sniffed, not by

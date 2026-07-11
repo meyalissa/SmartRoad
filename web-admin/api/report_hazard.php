@@ -10,14 +10,6 @@ require_once __DIR__ . '/_helpers.php';
 
 const UPLOAD_DIR = __DIR__ . '/../uploads/';
 
-// Maps legacy/alternate labels from older app builds onto the DB's ENUM values.
-const HAZARD_TYPE_ALIASES = [
-    'Traffic Accident' => 'Accident',
-];
-const ALLOWED_HAZARD_TYPES = [
-    'Pothole', 'Flood', 'Accident', 'Fallen Tree', 'Damaged Road Sign', 'Broken Traffic Light',
-];
-
 function respond(int $httpCode, string $status, ?string $id, string $message): void {
     apiRespond($httpCode, $status, ['id' => $id, 'message' => $message]);
 }

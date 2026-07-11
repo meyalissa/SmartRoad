@@ -2,8 +2,6 @@ package com.smartroad.ui.profile;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.smartroad.R;
 import com.smartroad.databinding.ActivityChangePasswordBinding;
+import com.smartroad.util.LoadingDialogHelper;
 import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.ChangePasswordViewModel;
 
@@ -67,11 +66,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
 
         binding.btnSavePassword.setEnabled(false);
-        showLoading();
+        loadingDialog = LoadingDialogHelper.show(this);
 
         viewModel.changePassword(session.getUserId(), currentPassword, newPassword, confirmPassword)
                 .observe(this, response -> {
-                    hideLoading();
+                    LoadingDialogHelper.hide(loadingDialog);
                     binding.btnSavePassword.setEnabled(true);
                     if (response != null && response.isSuccess()) {
                         Toast.makeText(this, R.string.password_changed, Toast.LENGTH_SHORT).show();
@@ -93,22 +92,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         return field.getText() == null ? "" : field.getText().toString().trim();
     }
 
-    private void showLoading() {
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loading, null);
-        loadingDialog = new MaterialAlertDialogBuilder(this)
-                .setView(dialogView)
-                .setCancelable(false)
-                .create();
-        loadingDialog.show();
-    }
-
-    private void hideLoading() {
-        if (loadingDialog != null && loadingDialog.isShowing()) loadingDialog.dismiss();
-    }
-
     @Override
     protected void onDestroy() {
-        hideLoading();
+        LoadingDialogHelper.hide(loadingDialog);
         binding = null;
         super.onDestroy();
     }

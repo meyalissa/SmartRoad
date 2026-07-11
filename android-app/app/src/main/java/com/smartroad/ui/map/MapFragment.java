@@ -33,7 +33,6 @@ import com.smartroad.util.MarkerColorUtil;
 import com.smartroad.viewmodel.MapViewModel;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickListener {
@@ -92,9 +91,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
         viewModel.getHazards().observe(getViewLifecycleOwner(), hazards -> {
             if (googleMap == null || binding == null) return;
             if (hazards == null) {
-                Toast.makeText(getContext(),
-                        "Unable to load hazard reports. Please check your connection.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_loading_hazards, Toast.LENGTH_SHORT).show();
             }
             googleMap.clear();
             markerHazardMap.clear();

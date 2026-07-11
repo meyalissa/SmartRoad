@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.smartroad.R;
 import com.smartroad.databinding.ActivityMyReportsBinding;
-import com.smartroad.model.Hazard;
 import com.smartroad.ui.detail.HazardDetailActivity;
 import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.MyReportsViewModel;

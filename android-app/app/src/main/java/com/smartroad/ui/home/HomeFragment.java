@@ -113,9 +113,7 @@ public class HomeFragment extends Fragment {
     private void loadStats() {
         viewModel.loadHazards().observe(getViewLifecycleOwner(), hazards -> {
             if (hazards == null) {
-                Toast.makeText(getContext(),
-                        "Unable to load hazard reports. Please check your connection.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_loading_hazards, Toast.LENGTH_SHORT).show();
             }
             int total = 0, resolved = 0;
             if (hazards != null) {

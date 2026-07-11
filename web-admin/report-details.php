@@ -16,7 +16,7 @@ require_once 'auth.php';
 
     <div class="admin-layout">
         <?php $active_page = 'hazard-form'; require 'sidebar.php'; ?>
-    
+
         <main class="page-content">
             <div style="margin-bottom:20px;">
                 <button class="back-btn" onclick="history.back()">
@@ -37,38 +37,107 @@ require_once 'auth.php';
                         <td id="reportUser"></td>
                     </tr>
                     <tr>
-                        <th>Date & Time</th>
+                        <th>Date &amp; Time</th>
                         <td id="reportDate"></td>
-                    </tr>
-                    <tr>
-                        <th>Hazard Type</th>
-                        <td id="reportHazard"></td>
-                    </tr>
-                    <tr>
-                        <th>Latitude, Longitude</th>
-                        <td>
-                            <div class="location-info">
-                                <span id="reportCoords">Loading...</span>
-                            </div>
-                            <div id="map"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td id="reportStatus"></td>
-                    </tr>
-                    <tr>
-                        <th>Photo</th>
-                        <td>
-                            <img id="reportPhoto" src="" width="350" style="max-width:100%;border-radius:8px;">
-                        </td>
                     </tr>
                 </table>
 
-                <div class="action-buttons">
-                    <button id="investigateBtn" class="btn btn-warning" onclick="changeStatus('Under Investigation')">Under Investigation</button>
-                    <button id="resolvedBtn" class="btn btn-success" onclick="changeStatus('Resolved')">Mark as Resolved</button>
-                </div>
+                <form id="editForm">
+                    <div class="form-group">
+                        <label class="form-label">Hazard Type</label>
+                        <select class="select" id="editHazardType" required>
+                            <option value="Pothole">Pothole</option>
+                            <option value="Flood">Flood</option>
+                            <option value="Accident">Accident</option>
+                            <option value="Fallen Tree">Fallen Tree</option>
+                            <option value="Damaged Road Sign">Damaged Road Sign</option>
+                            <option value="Broken Traffic Light">Broken Traffic Light</option>
+                        </select>
+                        <div class="form-error" id="errHazardType">Please select a hazard type.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="textarea" id="editDescription" rows="4" required></textarea>
+                        <div class="form-error" id="errDescription">Please enter a description.</div>
+                    </div>
+
+                    <div class="form-group flex gap-12">
+                        <div style="flex:1">
+                            <label class="form-label">Latitude</label>
+                            <input class="input" type="number" step="0.0000001" id="editLatitude" required>
+                            <div class="form-error" id="errLatitude">Must be between -90 and 90.</div>
+                        </div>
+                        <div style="flex:1">
+                            <label class="form-label">Longitude</label>
+                            <input class="input" type="number" step="0.0000001" id="editLongitude" required>
+                            <div class="form-error" id="errLongitude">Must be between -180 and 180.</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="select" id="editStatus" required>
+                            <option value="New">New</option>
+                            <option value="Under Investigation">Under Investigation</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Photo</label>
+                        <div class="photo-box" style="width:160px;height:120px;margin-bottom:8px;">
+                            <img id="reportPhoto" src="" alt="Report photo" style="display:none;">
+                        </div>
+                        <input class="input" type="file" id="editPhoto" accept="image/jpeg,image/png,image/webp">
+                        <div class="form-error" id="errPhoto"></div>
+                    </div>
+
+                    <div class="location-info">
+                        <span id="reportCoords">Loading...</span>
+                    </div>
+                    <div id="map"></div>
+
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary" id="saveReportBtn">
+                            <i class="ti ti-device-floppy"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ============ MAINTENANCE INFORMATION ============ -->
+            <div class="card">
+                <div class="card-title">Maintenance Information</div>
+
+                <form id="maintenanceForm">
+                    <div class="form-group">
+                        <label class="form-label">Maintenance Team</label>
+                        <input class="input" type="text" id="maintenanceTeam" placeholder="e.g. Public Works Crew 3">
+                    </div>
+
+                    <div class="form-group flex gap-12">
+                        <div style="flex:1">
+                            <label class="form-label">Repair Date</label>
+                            <input class="input" type="date" id="repairDate">
+                        </div>
+                        <div style="flex:1">
+                            <label class="form-label">Completed Date</label>
+                            <input class="input" type="date" id="completedDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Maintenance Notes</label>
+                        <textarea class="textarea" id="maintenanceNotes" rows="3" placeholder="Work performed, materials used, follow-up needed…"></textarea>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary" id="saveMaintenanceBtn">
+                            <i class="ti ti-device-floppy"></i> Save
+                        </button>
+                    </div>
+                </form>
             </div>
         </main>
     </div>
@@ -95,16 +164,29 @@ require_once 'auth.php';
                 document.getElementById("reportID").textContent = report.id;
                 document.getElementById("reportUser").textContent = report.user;
                 document.getElementById("reportDate").textContent = new Date(report.date).toLocaleString();
-                document.getElementById("reportHazard").textContent = report.hazard;
-                document.getElementById("reportStatus").textContent = report.status;
-                
+
+                document.getElementById("editHazardType").value = report.hazard;
+                document.getElementById("editDescription").value = report.description || "";
+                document.getElementById("editStatus").value = report.status;
+
                 const lat = Number(report.lat);
                 const lng = Number(report.lng);
+                document.getElementById("editLatitude").value = lat;
+                document.getElementById("editLongitude").value = lng;
                 document.getElementById("reportCoords").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
+                const photoImg = document.getElementById("reportPhoto");
                 if (report.photo) {
-                    document.getElementById("reportPhoto").src = "uploads/" + report.photo;
+                    photoImg.src = "uploads/" + report.photo;
+                    photoImg.style.display = "block";
                 }
+
+                // Maintenance section — load existing record if one exists,
+                // otherwise leave the form blank ready for creation.
+                document.getElementById("maintenanceTeam").value = report.maintenance_team || "";
+                document.getElementById("maintenanceNotes").value = report.maintenance_notes || "";
+                document.getElementById("repairDate").value = report.repair_date ? report.repair_date.substring(0, 10) : "";
+                document.getElementById("completedDate").value = report.completed_date ? report.completed_date.substring(0, 10) : "";
 
                 map = L.map('map', { zoomControl: false }).setView([lat, lng], 15);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -114,49 +196,116 @@ require_once 'auth.php';
 
                 // Ensure Leaflet recalculates correctly with the smaller 100px height window
                 setTimeout(() => { map.invalidateSize(); }, 200);
-
-                updateButtons();
             } catch (error) {
                 console.error(error);
                 alert("Failed loading report");
             }
         }
 
-        async function changeStatus(status) {
-            if (!report) return;
-            try {
-                const response = await fetch("update-report-status.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id: report.id, status: status })
-                });
+        function clearErrors(form) {
+            form.querySelectorAll('.form-error').forEach(el => el.classList.remove('show'));
+            form.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+        }
 
+        function showFieldError(fieldEl, errorEl) {
+            fieldEl.classList.add('invalid');
+            errorEl.classList.add('show');
+        }
+
+        document.getElementById("editForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!report) return;
+            clearErrors(e.target);
+
+            const hazardType = document.getElementById("editHazardType").value;
+            const description = document.getElementById("editDescription").value.trim();
+            const latitude = document.getElementById("editLatitude").value;
+            const longitude = document.getElementById("editLongitude").value;
+            const status = document.getElementById("editStatus").value;
+            const photoFile = document.getElementById("editPhoto").files[0];
+
+            let valid = true;
+            if (!description) {
+                showFieldError(document.getElementById("editDescription"), document.getElementById("errDescription"));
+                valid = false;
+            }
+            const lat = Number(latitude), lng = Number(longitude);
+            if (!latitude || lat < -90 || lat > 90) {
+                showFieldError(document.getElementById("editLatitude"), document.getElementById("errLatitude"));
+                valid = false;
+            }
+            if (!longitude || lng < -180 || lng > 180) {
+                showFieldError(document.getElementById("editLongitude"), document.getElementById("errLongitude"));
+                valid = false;
+            }
+            if (!valid) return;
+
+            const btn = document.getElementById("saveReportBtn");
+            btn.disabled = true;
+            btn.textContent = "Saving...";
+
+            try {
+                const formData = new FormData();
+                formData.append("id", report.id);
+                formData.append("hazard_type", hazardType);
+                formData.append("description", description);
+                formData.append("latitude", latitude);
+                formData.append("longitude", longitude);
+                formData.append("status", status);
+                if (photoFile) formData.append("photo", photoFile);
+
+                const response = await fetch("edit_report.php", { method: "POST", body: formData });
                 const result = await response.json();
+
                 if (!result.success) {
-                    alert("Failed updating status");
+                    document.getElementById("errPhoto").textContent = result.message || "Update failed.";
+                    document.getElementById("errPhoto").classList.add("show");
                     return;
                 }
 
-                report.status = status;
-                document.getElementById("reportStatus").textContent = status;
-                updateButtons();
-                alert("Status updated to " + status);
+                alert("Report updated successfully.");
+                await loadReport();
             } catch (error) {
                 console.error(error);
-                alert("Server error");
+                alert("Server error while saving the report.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-device-floppy"></i> Save Changes';
             }
-        }
+        });
 
-        function updateButtons() {
-            const investigate = document.getElementById("investigateBtn");
-            const resolved = document.getElementById("resolvedBtn");
+        document.getElementById("maintenanceForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!report) return;
 
-            investigate.disabled = false;
-            resolved.disabled = false;
+            const btn = document.getElementById("saveMaintenanceBtn");
+            btn.disabled = true;
+            btn.textContent = "Saving...";
 
-            if (report.status === "Under Investigation") investigate.disabled = true;
-            if (report.status === "Resolved") resolved.disabled = true;
-        }
+            try {
+                const formData = new FormData();
+                formData.append("hazard_report_id", report.id);
+                formData.append("maintenance_team", document.getElementById("maintenanceTeam").value.trim());
+                formData.append("repair_date", document.getElementById("repairDate").value);
+                formData.append("completed_date", document.getElementById("completedDate").value);
+                formData.append("maintenance_notes", document.getElementById("maintenanceNotes").value.trim());
+
+                const response = await fetch("save_maintenance.php", { method: "POST", body: formData });
+                const result = await response.json();
+
+                if (!result.success) {
+                    alert(result.message || "Failed saving maintenance information.");
+                    return;
+                }
+                alert("Maintenance information saved.");
+            } catch (error) {
+                console.error(error);
+                alert("Server error while saving maintenance information.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ti ti-device-floppy"></i> Save';
+            }
+        });
 
         loadReport();
     </script>

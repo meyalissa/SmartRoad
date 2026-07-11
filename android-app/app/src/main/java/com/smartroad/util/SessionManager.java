@@ -43,5 +43,4 @@ public class SessionManager {
 
     // ---- FCM token (structure only — not yet uploaded to the backend) ----
     public void saveFcmToken(String token) { prefs.edit().putString(KEY_FCM_TOKEN, token).apply(); }
-    public String getFcmToken() { return prefs.getString(KEY_FCM_TOKEN, ""); }
 }
