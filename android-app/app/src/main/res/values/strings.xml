@@ -69,6 +69,36 @@
     <string name="my_reports">My Reports</string>
     <string name="no_reports_yet">You haven\'t submitted any reports yet</string>
     <string name="error_loading_reports">Unable to load your reports. Please check your connection.</string>
+    <string name="error_loading_profile">Unable to load profile. Please check your connection.</string>
+    <string name="logout_confirm_title">Log Out</string>
+    <string name="logout_confirm_message">Are you sure you want to log out of your account?</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Edit Profile -->
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="hint_full_name">Full Name</string>
+    <string name="hint_email">Email</string>
+    <string name="action_change_photo">Change Photo</string>
+    <string name="action_save">Save Changes</string>
+    <string name="action_change_password">Change Password</string>
+    <string name="error_full_name_required">Please enter your full name</string>
+    <string name="error_email_required">Please enter a valid email address</string>
+    <string name="profile_updated">Profile updated successfully.</string>
+    <string name="error_updating_profile">Unable to update profile. Please try again.</string>
+    <string name="title_update_failed">Update Failed</string>
+
+    <!-- Change Password -->
+    <string name="change_password_title">Change Password</string>
+    <string name="hint_current_password">Current Password</string>
+    <string name="hint_new_password">New Password</string>
+    <string name="hint_confirm_password">Confirm New Password</string>
+    <string name="error_current_password_required">Please enter your current password</string>
+    <string name="error_new_password_required">Please enter a new password</string>
+    <string name="error_confirm_password_required">Please confirm your new password</string>
+    <string name="error_passwords_dont_match">Passwords do not match</string>
+    <string name="password_changed">Password changed successfully.</string>
+    <string name="error_changing_password">Unable to change password. Please try again.</string>
+    <string name="title_change_failed">Change Failed</string>
 
     <!-- About -->
     <string name="about">About</string>

@@ -1,5 +1,6 @@
 package com.smartroad.ui.profile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,6 +32,13 @@ public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
     private ProfileViewModel viewModel;
     private SessionManager session;
+
+    private final ActivityResultLauncher<Intent> editProfileLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    loadProfile();
+                }
+            });
 
     @Nullable
     @Override
@@ -53,13 +63,28 @@ public class ProfileFragment extends Fragment {
         binding.tvProfileUsername.setText("@" + session.getUsername());
         binding.tvAppVersion.setText(getString(R.string.version_label, appVersionName()));
 
+        loadProfile();
+
+        binding.btnMyReports.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), MyReportsActivity.class)));
+
+        binding.btnEditProfile.setOnClickListener(v ->
+                editProfileLauncher.launch(new Intent(requireContext(), EditProfileActivity.class)));
+
+        binding.btnAbout.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), AboutActivity.class)));
+
+        binding.btnLogout.setOnClickListener(v -> confirmLogout());
+    }
+
+    private void loadProfile() {
         viewModel.loadProfile(session.getUserId())
                 .observe(getViewLifecycleOwner(), profile -> {
                     if (binding == null) return;
                     if (profile == null || !profile.isSuccess()) {
                         String message = (profile != null && !TextUtils.isEmpty(profile.getMessage()))
                                 ? profile.getMessage()
-                                : "Unable to load profile. Please check your connection.";
+                                : getString(R.string.error_loading_profile);
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -91,17 +116,6 @@ public class ProfileFragment extends Fragment {
                                 .into(binding.ivProfilePhoto);
                     }
                 });
-
-        binding.btnMyReports.setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), MyReportsActivity.class)));
-
-        binding.btnEditProfile.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Edit profile coming soon", Toast.LENGTH_SHORT).show());
-
-        binding.btnAbout.setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), AboutActivity.class)));
-
-        binding.btnLogout.setOnClickListener(v -> confirmLogout());
     }
 
     private String appVersionName() {
@@ -115,9 +129,10 @@ public class ProfileFragment extends Fragment {
 
     private void confirmLogout() {
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.action_logout)
-                .setMessage("Are you sure you want to log out?")
-                .setNegativeButton("Cancel", null)
+                .setIcon(R.drawable.ic_logout)
+                .setTitle(R.string.logout_confirm_title)
+                .setMessage(R.string.logout_confirm_message)
+                .setNegativeButton(R.string.action_cancel, null)
                 .setPositiveButton(R.string.action_logout, (d, w) -> {
                     session.logout();
                     Intent intent = new Intent(requireContext(), LoginActivity.class);

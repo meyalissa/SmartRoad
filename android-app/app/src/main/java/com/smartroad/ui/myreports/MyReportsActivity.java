@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.smartroad.R;
 import com.smartroad.databinding.ActivityMyReportsBinding;
 import com.smartroad.model.Hazard;
 import com.smartroad.ui.detail.HazardDetailActivity;
@@ -44,6 +45,10 @@ public class MyReportsActivity extends AppCompatActivity {
 
         binding.swipeRefresh.setOnRefreshListener(this::loadReports);
 
+        // Show the spinner immediately on first load too, not just on a
+        // manual pull-to-refresh, so the screen never looks blank/frozen
+        // while the initial request is in flight.
+        binding.swipeRefresh.setRefreshing(true);
         loadReports();
     }
 
@@ -51,7 +56,7 @@ public class MyReportsActivity extends AppCompatActivity {
         viewModel.loadMyReports(session.getUserId()).observe(this, hazards -> {
             binding.swipeRefresh.setRefreshing(false);
             if (hazards == null) {
-                Toast.makeText(this, com.smartroad.R.string.error_loading_reports, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.error_loading_reports, Toast.LENGTH_SHORT).show();
                 return;
             }
             adapter.submitList(hazards);

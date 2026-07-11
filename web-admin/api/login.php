@@ -8,28 +8,17 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../db.php';
-
-function respond(int $httpCode, string $status, ?string $id, ?string $fullname, ?string $username, string $message): void {
-    http_response_code($httpCode);
-    echo json_encode([
-        'status'   => $status,
-        'id'       => $id,
-        'fullname' => $fullname,
-        'username' => $username,
-        'message'  => $message,
-    ]);
-    exit;
-}
+require_once __DIR__ . '/_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    respond(405, 'error', null, null, null, 'Method not allowed.');
+    apiRespond(405, 'error', ['message' => 'Method not allowed.']);
 }
 
 $username = isset($_POST['username']) ? trim($_POST['username']) : '';
 $password = isset($_POST['password']) ? (string) $_POST['password'] : '';
 
 if ($username === '' || $password === '') {
-    respond(400, 'error', null, null, null, 'Username and password are required.');
+    apiRespond(400, 'error', ['message' => 'Username and password are required.']);
 }
 
 try {
@@ -37,11 +26,18 @@ try {
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
+    // Same generic message for "no such user" and "wrong password" — never
+    // reveal which one it was, so an attacker can't enumerate valid usernames.
     if (!$user || !password_verify($password, $user['password'])) {
-        respond(401, 'error', null, null, null, 'Invalid username or password.');
+        apiRespond(401, 'error', ['message' => 'Invalid username or password.']);
     }
 
-    respond(200, 'success', (string) $user['id'], $user['full_name'], $user['username'], 'Login successful.');
+    apiRespond(200, 'success', [
+        'id'       => (string) $user['id'],
+        'fullname' => $user['full_name'],
+        'username' => $user['username'],
+        'message'  => 'Login successful.',
+    ]);
 } catch (PDOException $e) {
-    respond(500, 'error', null, null, null, 'Server error. Please try again later.');
+    apiRespond(500, 'error', ['message' => 'Server error. Please try again later.']);
 }

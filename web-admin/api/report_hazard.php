@@ -6,8 +6,8 @@
 
 header('Content-Type: application/json');
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/_helpers.php';
 
-const MAX_PHOTO_BYTES = 8 * 1024 * 1024; // 8 MB safety net (app compresses before upload)
 const UPLOAD_DIR = __DIR__ . '/../uploads/';
 
 // Maps legacy/alternate labels from older app builds onto the DB's ENUM values.
@@ -17,16 +17,9 @@ const HAZARD_TYPE_ALIASES = [
 const ALLOWED_HAZARD_TYPES = [
     'Pothole', 'Flood', 'Accident', 'Fallen Tree', 'Damaged Road Sign', 'Broken Traffic Light',
 ];
-const ALLOWED_IMAGE_MIME_TO_EXT = [
-    'image/jpeg' => 'jpg',
-    'image/png'  => 'png',
-    'image/webp' => 'webp',
-];
 
 function respond(int $httpCode, string $status, ?string $id, string $message): void {
-    http_response_code($httpCode);
-    echo json_encode(['status' => $status, 'message' => $message, 'id' => $id]);
-    exit;
+    apiRespond($httpCode, $status, ['id' => $id, 'message' => $message]);
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -59,6 +52,9 @@ if (!is_numeric($latitude) || !is_numeric($longitude)
     respond(400, 'error', null, 'Invalid GPS coordinates.');
 }
 
+// hazard_reports.user_id has a foreign key to users.id — checking here
+// first gives a clean 400 instead of letting an invalid id fall through
+// to a raw FK-constraint PDOException during the INSERT below.
 try {
     $stmt = $pdo->prepare('SELECT id FROM users WHERE id = ?');
     $stmt->execute([$userId]);
@@ -72,33 +68,11 @@ try {
 // ----- Photo (optional) -----
 $photoFilename = null;
 if (!empty($_FILES['photo']['name'])) {
-    $file = $_FILES['photo'];
-
-    if ($file['error'] !== UPLOAD_ERR_OK) {
-        respond(400, 'error', null, 'Photo upload failed. Please try again.');
+    $upload = validateAndStoreImage($_FILES['photo'], UPLOAD_DIR, 'hz_');
+    if (!$upload['ok']) {
+        respond(400, 'error', null, $upload['error']);
     }
-    if ($file['size'] > MAX_PHOTO_BYTES) {
-        respond(400, 'error', null, 'Photo is too large (max 8 MB).');
-    }
-
-    // Trust the actual file content, not the client-supplied name/extension,
-    // so a renamed executable can never pass as an image.
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mime = finfo_file($finfo, $file['tmp_name']);
-    finfo_close($finfo);
-
-    if (!isset(ALLOWED_IMAGE_MIME_TO_EXT[$mime]) || getimagesize($file['tmp_name']) === false) {
-        respond(400, 'error', null, 'Photo must be a valid JPG, PNG or WEBP image.');
-    }
-
-    if (!is_dir(UPLOAD_DIR)) {
-        mkdir(UPLOAD_DIR, 0777, true);
-    }
-
-    $photoFilename = uniqid('hz_', true) . '.' . ALLOWED_IMAGE_MIME_TO_EXT[$mime];
-    if (!move_uploaded_file($file['tmp_name'], UPLOAD_DIR . $photoFilename)) {
-        respond(500, 'error', null, 'Could not save photo. Please try again.');
-    }
+    $photoFilename = $upload['filename'];
 }
 
 // ----- Insert -----

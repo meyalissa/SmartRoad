@@ -4,6 +4,8 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 
+import com.smartroad.BuildConfig;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -20,11 +22,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *                a physical device on the same Wi-Fi must use the dev
  *                machine's LAN IP instead — update DEVICE_LAN_IP below if
  *                your network changes.
- *   - DEMO_MODE: legacy offline-demo flag. Every module (login, hazards,
- *                report submission, profile) now always calls the real API
- *                regardless of this flag — kept in place only as a single
- *                kill switch should a future module need to fall back to
- *                sample data before its backend is ready.
+ *
+ * Every module (login, hazards, report submission, profile) talks to the
+ * live PHP backend — there is no offline/demo mode.
  */
 public class ApiClient {
 
@@ -35,8 +35,6 @@ public class ApiClient {
     private static final String DEVICE_BASE_URL = "http://" + DEVICE_LAN_IP + "/SmartRoad/web-admin/api/";
 
     public static final String BASE_URL = isEmulator() ? EMULATOR_BASE_URL : DEVICE_BASE_URL;
-
-    public static final boolean DEMO_MODE = false;
 
     private static Retrofit retrofit;
 
@@ -59,8 +57,13 @@ public class ApiClient {
     @NonNull
     private static Retrofit getRetrofit() {
         if (retrofit == null) {
+            // Full request/response bodies (including the login password field)
+            // are only logged in debug builds — never in release, to avoid
+            // leaking credentials or user data via Logcat.
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            logging.setLevel(BuildConfig.DEBUG
+                    ? HttpLoggingInterceptor.Level.BODY
+                    : HttpLoggingInterceptor.Level.NONE);
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(20, TimeUnit.SECONDS)

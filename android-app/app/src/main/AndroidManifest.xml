@@ -67,6 +67,16 @@
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity" />
 
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity" />
+
+        <activity
+            android:name=".ui.profile.ChangePasswordActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.profile.EditProfileActivity" />
+
         <!-- FCM structure scaffold (token capture only, no notifications shown yet) -->
         <service
             android:name=".notifications.SmartRoadFirebaseMessagingService"

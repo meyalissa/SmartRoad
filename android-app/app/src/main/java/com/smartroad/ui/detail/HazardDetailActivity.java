@@ -1,6 +1,7 @@
 package com.smartroad.ui.detail;
 
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -34,7 +35,7 @@ public class HazardDetailActivity extends AppCompatActivity {
 
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
-        hazard = (Hazard) getIntent().getSerializableExtra(EXTRA_HAZARD);
+        hazard = getHazardExtra();
         if (hazard == null) { finish(); return; }
 
         binding.tvDetailType.setText(hazard.getType());
@@ -79,6 +80,14 @@ public class HazardDetailActivity extends AppCompatActivity {
                          String label, String value) {
         row.tvRowLabel.setText(label);
         row.tvRowValue.setText(value);
+    }
+
+    @SuppressWarnings("deprecation")
+    private Hazard getHazardExtra() {
+        if (Build.VERSION.SDK_INT >= 33) {
+            return getIntent().getSerializableExtra(EXTRA_HAZARD, Hazard.class);
+        }
+        return (Hazard) getIntent().getSerializableExtra(EXTRA_HAZARD);
     }
 
     // ----- MapView lifecycle forwarding -----

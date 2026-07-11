@@ -1,5 +1,6 @@
 package com.smartroad.network;
 
+import com.smartroad.model.ApiResponse;
 import com.smartroad.model.Hazard;
 import com.smartroad.model.LoginResponse;
 import com.smartroad.model.ProfileResponse;
@@ -44,4 +45,20 @@ public interface ApiService {
 
     @GET("profile.php")
     Call<ProfileResponse> getProfile(@Query("user_id") String userId);
+
+    @Multipart
+    @POST("update_profile.php")
+    Call<ApiResponse> updateProfile(
+            @Part("user_id") RequestBody userId,
+            @Part("full_name") RequestBody fullName,
+            @Part("email") RequestBody email,
+            @Part MultipartBody.Part photo);
+
+    @FormUrlEncoded
+    @POST("change_password.php")
+    Call<ApiResponse> changePassword(
+            @Field("user_id") String userId,
+            @Field("current_password") String currentPassword,
+            @Field("new_password") String newPassword,
+            @Field("confirm_password") String confirmPassword);
 }

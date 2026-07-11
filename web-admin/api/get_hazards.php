@@ -10,16 +10,13 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed.']);
-    exit;
+    apiRespond(405, 'error', ['message' => 'Method not allowed.']);
 }
 
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$uploadsBaseUrl = $scheme . '://' . $host . '/SmartRoad/web-admin/uploads/';
+$uploadsBaseUrl = apiOrigin() . 'uploads/';
 
 try {
     $stmt = $pdo->query(
@@ -46,9 +43,11 @@ try {
         ];
     }
 
+    // Always a bare JSON array on success — Retrofit/Gson parses this
+    // response directly as List<Hazard>, so it must never be wrapped in an
+    // envelope object the way error responses are.
     http_response_code(200);
     echo json_encode($hazards);
 } catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Server error. Please try again later.']);
+    apiRespond(500, 'error', ['message' => 'Server error. Please try again later.']);
 }

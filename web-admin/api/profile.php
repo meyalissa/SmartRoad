@@ -6,20 +6,15 @@
 
 header('Content-Type: application/json');
 require_once __DIR__ . '/../db.php';
-
-function respond(int $httpCode, string $status, array $extra = []): void {
-    http_response_code($httpCode);
-    echo json_encode(array_merge(['status' => $status], $extra));
-    exit;
-}
+require_once __DIR__ . '/_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    respond(405, 'error', ['message' => 'Method not allowed.']);
+    apiRespond(405, 'error', ['message' => 'Method not allowed.']);
 }
 
 $userId = isset($_GET['user_id']) ? trim($_GET['user_id']) : '';
 if ($userId === '' || !ctype_digit($userId)) {
-    respond(400, 'error', ['message' => 'user_id is required.']);
+    apiRespond(400, 'error', ['message' => 'user_id is required.']);
 }
 
 try {
@@ -28,9 +23,13 @@ try {
     $user = $stmt->fetch();
 
     if (!$user) {
-        respond(404, 'error', ['message' => 'User not found.']);
+        apiRespond(404, 'error', ['message' => 'User not found.']);
     }
 
+    // MySQL evaluates each `status = '...'` comparison to 0 or 1, so SUM()
+    // over it counts how many rows matched — one query, four counts, always
+    // in sync with each other (no risk of running four separate queries at
+    // slightly different times and getting a total that doesn't add up).
     $statsStmt = $pdo->prepare("
         SELECT
             COUNT(*) AS total,
@@ -43,24 +42,22 @@ try {
     $statsStmt->execute([$userId]);
     $stats = $statsStmt->fetch();
 
-    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
     $photoUrl = $user['profile_picture']
-        ? $scheme . '://' . $host . '/SmartRoad/web-admin/uploads/users/' . rawurlencode($user['profile_picture'])
+        ? apiOrigin() . 'uploads/users/' . rawurlencode($user['profile_picture'])
         : null;
 
-    respond(200, 'success', [
-        'id'                   => (string) $user['id'],
-        'fullname'             => $user['full_name'],
-        'username'             => $user['username'],
-        'email'                => $user['email'],
-        'photo'                => $photoUrl,
-        'created_at'           => $user['created_at'] ? date('d M Y', strtotime($user['created_at'])) : null,
-        'total_reports'        => (int) $stats['total'],
-        'pending_reports'      => (int) $stats['pending'],
-        'investigating_reports'=> (int) $stats['investigating'],
-        'resolved_reports'     => (int) $stats['resolved'],
+    apiRespond(200, 'success', [
+        'id'                    => (string) $user['id'],
+        'fullname'              => $user['full_name'],
+        'username'              => $user['username'],
+        'email'                 => $user['email'],
+        'photo'                 => $photoUrl,
+        'created_at'            => $user['created_at'] ? date('d M Y', strtotime($user['created_at'])) : null,
+        'total_reports'         => (int) $stats['total'],
+        'pending_reports'       => (int) $stats['pending'],
+        'investigating_reports' => (int) $stats['investigating'],
+        'resolved_reports'      => (int) $stats['resolved'],
     ]);
 } catch (PDOException $e) {
-    respond(500, 'error', ['message' => 'Server error. Please try again later.']);
+    apiRespond(500, 'error', ['message' => 'Server error. Please try again later.']);
 }

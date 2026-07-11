@@ -23,5 +23,7 @@ try {
         ]
     );
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    error_log('SmartRoad DB connection failed: ' . $e->getMessage());
+    http_response_code(500);
+    die('Database connection failed. Please try again later.');
 }

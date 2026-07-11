@@ -18,6 +18,11 @@ public class SmartRoadFirebaseMessagingService extends FirebaseMessagingService 
 
     private static final String TAG = "SmartRoadFcm";
 
+    // onNewToken(String) is flagged deprecated by the resolved firebase-messaging
+    // BOM version with no documented replacement signature yet — suppressed
+    // rather than guessed at; revisit against current Firebase docs when
+    // notifications are actually implemented.
+    @SuppressWarnings("deprecation")
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
