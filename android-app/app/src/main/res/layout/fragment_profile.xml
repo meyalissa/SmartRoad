@@ -84,42 +84,55 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="13sp" />
 
+        <!-- Statistics grid (2x2): Total Reports / New / Under Investigation / Resolved -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_lg"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <include
-                android:id="@+id/profileTotal"
-                layout="@layout/item_stat"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:orientation="horizontal">
 
-            <include
-                android:id="@+id/profilePending"
-                layout="@layout/item_stat"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_sm"
-                android:layout_weight="1" />
+                <include
+                    android:id="@+id/profileTotal"
+                    layout="@layout/item_stat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-            <include
-                android:id="@+id/profileInvestigating"
-                layout="@layout/item_stat"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_sm"
-                android:layout_weight="1" />
+                <include
+                    android:id="@+id/profileNew"
+                    layout="@layout/item_stat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_sm"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
-            <include
-                android:id="@+id/profileResolved"
-                layout="@layout/item_stat"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_sm"
-                android:layout_weight="1" />
+                android:layout_marginTop="@dimen/space_sm"
+                android:orientation="horizontal">
+
+                <include
+                    android:id="@+id/profileInvestigating"
+                    layout="@layout/item_stat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/profileResolved"
+                    layout="@layout/item_stat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_sm"
+                    android:layout_weight="1" />
+            </LinearLayout>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

@@ -13,13 +13,22 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/ivStatIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_stat_circle"
+            android:contentDescription="@null"
+            android:padding="10dp" />
+
         <TextView
             android:id="@+id/tvStatValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
             android:text="0"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorOnSurface"
             android:textStyle="bold" />
 
         <TextView

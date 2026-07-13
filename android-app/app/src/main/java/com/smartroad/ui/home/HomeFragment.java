@@ -1,6 +1,7 @@
 package com.smartroad.ui.home;
 
 import android.Manifest;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,11 +25,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.smartroad.R;
+import com.smartroad.config.BrandColors;
 import com.smartroad.databinding.FragmentHomeBinding;
 import com.smartroad.model.Hazard;
 import com.smartroad.util.LocationHelper;
 import com.smartroad.util.MarkerColorUtil;
 import com.smartroad.util.SessionManager;
+import com.smartroad.util.StatCardHelper;
 import com.smartroad.viewmodel.HomeViewModel;
 
 import java.text.SimpleDateFormat;
@@ -75,10 +78,7 @@ public class HomeFragment extends Fragment {
         SessionManager session = new SessionManager(requireContext());
         binding.tvWelcome.setText(getString(R.string.welcome_user, session.getFullName()));
 
-        // Stat labels
-        binding.statTotal.tvStatLabel.setText(R.string.total_hazards);
-        binding.statResolved.tvStatLabel.setText(R.string.resolved_hazards);
-        binding.statPending.tvStatLabel.setText(R.string.pending_hazards);
+        setupStatCards();
 
         // Lite-mode map preview lifecycle
         binding.mapPreview.onCreate(savedInstanceState);
@@ -87,14 +87,34 @@ public class HomeFragment extends Fragment {
             refreshPreviewMap();
         });
 
+        binding.swipeRefreshHome.setOnRefreshListener(this::loadStats);
+
         startClock();
-        loadStats();
         requestLocation();
 
         binding.btnViewMap.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.mapFragment));
         binding.btnReportHazard.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.reportFragment));
+    }
+
+    /** One-time setup of each stat card's icon, icon tint, and label (values are filled in by loadStats()). */
+    private void setupStatCards() {
+        StatCardHelper.configure(binding.statTotal.tvStatLabel, binding.statTotal.ivStatIcon,
+                R.string.total_reports, R.drawable.ic_total_reports,
+                requireContext().getColor(R.color.primaryColor));
+
+        StatCardHelper.configure(binding.statNew.tvStatLabel, binding.statNew.ivStatIcon,
+                R.string.status_new_label, MarkerColorUtil.iconForStatus("New"),
+                Color.parseColor(BrandColors.STATUS_NEW));
+
+        StatCardHelper.configure(binding.statInvestigating.tvStatLabel, binding.statInvestigating.ivStatIcon,
+                R.string.status_investigating_label, MarkerColorUtil.iconForStatus("Under Investigation"),
+                Color.parseColor(BrandColors.STATUS_INVESTIGATION));
+
+        StatCardHelper.configure(binding.statResolved.tvStatLabel, binding.statResolved.ivStatIcon,
+                R.string.status_resolved_label, MarkerColorUtil.iconForStatus("Resolved"),
+                Color.parseColor(BrandColors.STATUS_RESOLVED));
     }
 
     private void startClock() {
@@ -111,23 +131,31 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadStats() {
+        binding.swipeRefreshHome.setRefreshing(true);
         viewModel.loadHazards().observe(getViewLifecycleOwner(), hazards -> {
+            if (binding == null) return;
             if (hazards == null) {
                 Toast.makeText(getContext(), R.string.error_loading_hazards, Toast.LENGTH_SHORT).show();
             }
-            int total = 0, resolved = 0;
+            int total = 0, newCount = 0, investigating = 0, resolved = 0;
             if (hazards != null) {
                 total = hazards.size();
                 for (Hazard h : hazards) {
-                    if ("resolved".equalsIgnoreCase(h.getStatus())) resolved++;
+                    switch (h.getStatus() == null ? "" : h.getStatus().toLowerCase()) {
+                        case "resolved":            resolved++;      break;
+                        case "under investigation": investigating++; break;
+                        default:                    newCount++;      break; // "New" and anything unrecognized
+                    }
                 }
             }
             binding.statTotal.tvStatValue.setText(String.valueOf(total));
+            binding.statNew.tvStatValue.setText(String.valueOf(newCount));
+            binding.statInvestigating.tvStatValue.setText(String.valueOf(investigating));
             binding.statResolved.tvStatValue.setText(String.valueOf(resolved));
-            binding.statPending.tvStatValue.setText(String.valueOf(total - resolved));
 
             cachedHazards = hazards;
             refreshPreviewMap();
+            binding.swipeRefreshHome.setRefreshing(false);
         });
     }
 
@@ -213,7 +241,16 @@ public class HomeFragment extends Fragment {
     }
 
     // ----- MapView lifecycle forwarding -----
-    @Override public void onResume() { super.onResume(); if (binding != null) binding.mapPreview.onResume(); }
+    // loadStats() also lives here (not onViewCreated) so Home's counts are always fresh
+    // whenever the screen becomes visible again - e.g. after submitting a report or
+    // switching back from another tab - with no separate "did this already load" flag needed.
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (binding == null) return;
+        binding.mapPreview.onResume();
+        loadStats();
+    }
     @Override public void onPause() { if (binding != null) binding.mapPreview.onPause(); super.onPause(); }
     @Override public void onLowMemory() { super.onLowMemory(); if (binding != null) binding.mapPreview.onLowMemory(); }
 

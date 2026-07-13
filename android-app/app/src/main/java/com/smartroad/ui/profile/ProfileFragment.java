@@ -3,6 +3,7 @@ package com.smartroad.ui.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,11 +21,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.smartroad.R;
+import com.smartroad.config.BrandColors;
 import com.smartroad.databinding.FragmentProfileBinding;
 import com.smartroad.ui.about.AboutActivity;
 import com.smartroad.ui.auth.LoginActivity;
 import com.smartroad.ui.myreports.MyReportsActivity;
+import com.smartroad.util.MarkerColorUtil;
 import com.smartroad.util.SessionManager;
+import com.smartroad.util.StatCardHelper;
 import com.smartroad.viewmodel.ProfileViewModel;
 
 public class ProfileFragment extends Fragment {
@@ -54,10 +58,7 @@ public class ProfileFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         session = new SessionManager(requireContext());
 
-        binding.profileTotal.tvStatLabel.setText(R.string.total_reports);
-        binding.profilePending.tvStatLabel.setText(R.string.reports_pending);
-        binding.profileInvestigating.tvStatLabel.setText(R.string.reports_investigating);
-        binding.profileResolved.tvStatLabel.setText(R.string.reports_resolved);
+        setupStatCards();
 
         binding.tvProfileName.setText(session.getFullName());
         binding.tvProfileUsername.setText("@" + session.getUsername());
@@ -75,6 +76,25 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(requireContext(), AboutActivity.class)));
 
         binding.btnLogout.setOnClickListener(v -> confirmLogout());
+    }
+
+    /** One-time setup of each stat card's icon, icon tint, and label (values are filled in by loadProfile()). */
+    private void setupStatCards() {
+        StatCardHelper.configure(binding.profileTotal.tvStatLabel, binding.profileTotal.ivStatIcon,
+                R.string.total_reports, R.drawable.ic_total_reports,
+                requireContext().getColor(R.color.primaryColor));
+
+        StatCardHelper.configure(binding.profileNew.tvStatLabel, binding.profileNew.ivStatIcon,
+                R.string.status_new_label, MarkerColorUtil.iconForStatus("New"),
+                Color.parseColor(BrandColors.STATUS_NEW));
+
+        StatCardHelper.configure(binding.profileInvestigating.tvStatLabel, binding.profileInvestigating.ivStatIcon,
+                R.string.status_investigating_label, MarkerColorUtil.iconForStatus("Under Investigation"),
+                Color.parseColor(BrandColors.STATUS_INVESTIGATION));
+
+        StatCardHelper.configure(binding.profileResolved.tvStatLabel, binding.profileResolved.ivStatIcon,
+                R.string.status_resolved_label, MarkerColorUtil.iconForStatus("Resolved"),
+                Color.parseColor(BrandColors.STATUS_RESOLVED));
     }
 
     private void loadProfile() {
@@ -102,7 +122,7 @@ public class ProfileFragment extends Fragment {
                         binding.tvProfileJoinDate.setVisibility(View.GONE);
                     }
                     binding.profileTotal.tvStatValue.setText(String.valueOf(profile.getTotalReports()));
-                    binding.profilePending.tvStatValue.setText(String.valueOf(profile.getPendingReports()));
+                    binding.profileNew.tvStatValue.setText(String.valueOf(profile.getPendingReports()));
                     binding.profileInvestigating.tvStatValue.setText(String.valueOf(profile.getInvestigatingReports()));
                     binding.profileResolved.tvStatValue.setText(String.valueOf(profile.getResolvedReports()));
                     if (TextUtils.isEmpty(profile.getPhotoUrl())) {

@@ -23,9 +23,6 @@
     <string name="current_location">Current Location</string>
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>
-    <string name="total_hazards">Total Hazards</string>
-    <string name="resolved_hazards">Resolved</string>
-    <string name="pending_hazards">Pending</string>
     <string name="action_view_map">View Map</string>
     <string name="action_report_hazard">Report Hazard</string>
 
@@ -72,9 +69,6 @@
     <string name="profile">Profile</string>
     <string name="username_label">Username</string>
     <string name="total_reports">Total Reports</string>
-    <string name="reports_resolved">Resolved</string>
-    <string name="reports_pending">Pending</string>
-    <string name="reports_investigating">Investigating</string>
     <string name="joined_on">Joined %1$s</string>
     <string name="action_edit_profile">Edit Profile</string>
     <string name="action_logout">Logout</string>
