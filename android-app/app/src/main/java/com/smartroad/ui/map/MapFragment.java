@@ -3,6 +3,8 @@ package com.smartroad.ui.map;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,22 +22,24 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.chip.ChipGroup;
 import com.smartroad.R;
+import com.smartroad.config.BrandColors;
 import com.smartroad.databinding.FragmentMapBinding;
 import com.smartroad.model.Hazard;
 import com.smartroad.ui.detail.HazardDetailActivity;
 import com.smartroad.util.LocationHelper;
-import com.smartroad.util.MarkerColorUtil;
+import com.smartroad.util.MarkerIconFactory;
 import com.smartroad.viewmodel.MapViewModel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickListener {
+public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
 
     private FragmentMapBinding binding;
     private MapViewModel viewModel;
@@ -68,50 +72,97 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
         viewModel = new ViewModelProvider(this).get(MapViewModel.class);
         locationHelper = new LocationHelper(requireContext());
 
+        setupFilterChips();
+        setupLegend();
+
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.mapContainer);
         if (mapFragment != null) {
             mapFragment.getMapAsync(map -> {
                 googleMap = map;
-                googleMap.setOnMarkerClickListener(this);
+                googleMap.setInfoWindowAdapter(new HazardInfoWindowAdapter(requireContext(), markerHazardMap));
+                googleMap.setOnInfoWindowClickListener(this);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 // Default camera over Kuala Lumpur until location is known
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng(3.1390, 101.6869), 12f));
                 enableMyLocation();
-                loadHazards();
+                observeHazards();
             });
         }
 
-        binding.fabRefresh.setOnClickListener(v -> loadHazards());
+        binding.fabRefresh.setOnClickListener(v -> viewModel.refresh());
         binding.fabMyLocation.setOnClickListener(v -> centerOnUser());
     }
 
-    private void loadHazards() {
-        viewModel.getHazards().observe(getViewLifecycleOwner(), hazards -> {
-            if (googleMap == null || binding == null) return;
-            if (hazards == null) {
-                Toast.makeText(getContext(), R.string.error_loading_hazards, Toast.LENGTH_SHORT).show();
-            }
-            googleMap.clear();
-            markerHazardMap.clear();
-            boolean isEmpty = hazards == null || hazards.isEmpty();
-            binding.emptyState.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-            if (isEmpty) return;
-            for (Hazard h : hazards) {
-                LatLng pos = new LatLng(h.getLatitudeAsDouble(), h.getLongitudeAsDouble());
-                String snippet = "Status: " + h.getStatus()
-                        + "\n" + h.getDescription()
-                        + "\nReported: " + h.getDatetime();
-                Marker marker = googleMap.addMarker(new MarkerOptions()
-                        .position(pos)
-                        .title(h.getType())
-                        .snippet(snippet)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                MarkerColorUtil.hueForStatus(h.getStatus()))));
-                if (marker != null) markerHazardMap.put(marker, h);
-            }
+    /** Wires the status/category ChipGroups to the ViewModel's in-memory filters. */
+    private void setupFilterChips() {
+        binding.chipGroupStatus.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty()) return;
+            viewModel.setStatusFilter(statusForChipId(checkedIds.get(0)));
         });
+
+        binding.chipGroupCategory.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty()) return;
+            viewModel.setCategoryFilter(categoryForChipId(checkedIds.get(0)));
+        });
+    }
+
+    private String statusForChipId(int chipId) {
+        if (chipId == R.id.chipStatusNew) return "New";
+        if (chipId == R.id.chipStatusInvestigating) return "Under Investigation";
+        if (chipId == R.id.chipStatusResolved) return "Resolved";
+        return MapViewModel.FILTER_ALL;
+    }
+
+    private String categoryForChipId(int chipId) {
+        if (chipId == R.id.chipCategoryPothole) return "Pothole";
+        if (chipId == R.id.chipCategoryFlood) return "Flood";
+        if (chipId == R.id.chipCategoryAccident) return "Accident";
+        if (chipId == R.id.chipCategoryFallenTree) return "Fallen Tree";
+        if (chipId == R.id.chipCategoryDamagedSign) return "Damaged Road Sign";
+        if (chipId == R.id.chipCategoryTrafficLight) return "Broken Traffic Light";
+        return MapViewModel.FILTER_ALL;
+    }
+
+    /** Tints the legend's status dots from the single source of truth, {@link BrandColors}. */
+    private void setupLegend() {
+        binding.legendStatusNew.setChipIconTint(
+                ColorStateList.valueOf(Color.parseColor(BrandColors.STATUS_NEW)));
+        binding.legendStatusInvestigating.setChipIconTint(
+                ColorStateList.valueOf(Color.parseColor(BrandColors.STATUS_INVESTIGATION)));
+        binding.legendStatusResolved.setChipIconTint(
+                ColorStateList.valueOf(Color.parseColor(BrandColors.STATUS_RESOLVED)));
+    }
+
+    private void observeHazards() {
+        viewModel.getFilteredHazards().observe(getViewLifecycleOwner(), this::renderMarkers);
+    }
+
+    /** Clears and rebuilds markers for the given (already filtered) list. Never touches the camera. */
+    private void renderMarkers(@Nullable List<Hazard> hazards) {
+        if (googleMap == null || binding == null) return;
+        if (hazards == null) {
+            Toast.makeText(getContext(), R.string.error_loading_hazards, Toast.LENGTH_SHORT).show();
+        }
+        googleMap.clear();
+        markerHazardMap.clear();
+        boolean isEmpty = hazards == null || hazards.isEmpty();
+        binding.emptyState.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if (isEmpty) return;
+        for (Hazard h : hazards) {
+            addHazardMarker(h);
+        }
+    }
+
+    /** Adds a single marker whose icon encodes both hazard category and status (see MarkerIconFactory). */
+    private void addHazardMarker(Hazard h) {
+        LatLng pos = new LatLng(h.getLatitudeAsDouble(), h.getLongitudeAsDouble());
+        Marker marker = googleMap.addMarker(new MarkerOptions()
+                .position(pos)
+                .title(h.getType())
+                .icon(MarkerIconFactory.getMarkerIcon(requireContext(), h.getType(), h.getStatus())));
+        if (marker != null) markerHazardMap.put(marker, h);
     }
 
     @SuppressLint("MissingPermission")
@@ -144,15 +195,13 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     }
 
     @Override
-    public boolean onMarkerClick(@NonNull Marker marker) {
+    public void onInfoWindowClick(@NonNull Marker marker) {
         Hazard hazard = markerHazardMap.get(marker);
         if (hazard != null) {
             Intent intent = new Intent(getContext(), HazardDetailActivity.class);
             intent.putExtra(HazardDetailActivity.EXTRA_HAZARD, hazard);
             startActivity(intent);
-            return true;
         }
-        return false;
     }
 
     @Override

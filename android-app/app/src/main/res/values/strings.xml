@@ -131,4 +131,22 @@
     <!-- Permissions -->
     <string name="permission_location_rationale">Location permission is needed to show your position and tag hazard reports.</string>
     <string name="permission_camera_rationale">Camera permission is needed to attach a photo to your report.</string>
+
+    <!-- Map filters & legend -->
+    <string name="filter_all">All</string>
+    <string name="filter_status_label">Status</string>
+    <string name="filter_category_label">Category</string>
+    <string name="status_new_label">New</string>
+    <string name="status_investigating_label">Under Investigation</string>
+    <string name="status_resolved_label">Resolved</string>
+    <string name="hazard_pothole">Pothole</string>
+    <string name="hazard_flood">Flood</string>
+    <string name="hazard_accident">Accident</string>
+    <string name="hazard_fallen_tree">Fallen Tree</string>
+    <string name="hazard_damaged_sign">Damaged Road Sign</string>
+    <string name="hazard_traffic_light">Broken Traffic Light</string>
+    <string name="info_window_status_label">Status:</string>
+    <string name="info_window_reporter_label">Reported by:</string>
+    <string name="info_window_date_label">Reported:</string>
+    <string name="info_window_description_label">Description:</string>
 </resources>

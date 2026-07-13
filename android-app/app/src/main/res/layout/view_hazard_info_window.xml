@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/textHazardType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textPrimaryColor"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        tools:text="Flood" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/info_window_status_label"
+        android:textColor="@color/textSecondaryColor"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/textStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        tools:text="Under Investigation" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/info_window_reporter_label"
+        android:textColor="@color/textSecondaryColor"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/textReporter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textPrimaryColor"
+        android:textSize="13sp"
+        tools:text="Ali Ahmad" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/info_window_date_label"
+        android:textColor="@color/textSecondaryColor"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textPrimaryColor"
+        android:textSize="13sp"
+        tools:text="11/07/2026 23:31" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/info_window_description_label"
+        android:textColor="@color/textSecondaryColor"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/textPrimaryColor"
+        android:textSize="13sp"
+        tools:text="Large pothole causing traffic congestion during peak hours." />
+
+</LinearLayout>

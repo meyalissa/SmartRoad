@@ -77,4 +77,21 @@
     <style name="Text.Body" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
+
+    <!-- Hazard Map: status/category filter chips (checkable, single-selection groups) -->
+    <style name="Widget.SmartRoad.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <item name="android:textSize">13sp</item>
+        <item name="chipMinHeight">34dp</item>
+    </style>
+
+    <!-- Hazard Map: compact, non-interactive legend entries -->
+    <style name="Widget.SmartRoad.Chip.Legend" parent="Widget.Material3.Chip.Assist">
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:textSize">11sp</item>
+        <item name="chipMinHeight">28dp</item>
+        <item name="chipIconSize">14dp</item>
+        <item name="chipStartPadding">6dp</item>
+        <item name="chipEndPadding">8dp</item>
+    </style>
 </resources>

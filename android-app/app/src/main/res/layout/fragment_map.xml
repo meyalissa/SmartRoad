@@ -1,62 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mapContainer"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <!-- Empty state (logo watermark), shown when no hazards are available -->
+    <!-- Permanent filter + legend panel, always visible above the map -->
     <LinearLayout
-        android:id="@+id/emptyState"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
+        android:background="?attr/colorSurface"
+        android:elevation="4dp"
         android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:alpha="0.35"
-            android:contentDescription="@null"
-            android:src="@drawable/logo_smartroad_mark" />
+        android:paddingHorizontal="@dimen/space_md"
+        android:paddingTop="@dimen/space_sm"
+        android:paddingBottom="@dimen/space_xs">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_sm"
-            android:text="@string/no_hazards_found"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:text="@string/filter_status_label"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusAll"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/filter_all" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusNew"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_new_label" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusInvestigating"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_investigating_label" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStatusResolved"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_resolved_label" />
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:text="@string/filter_category_label"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategoryAll"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/filter_all" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategoryPothole"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_pothole" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategoryFlood"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_flood" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategoryAccident"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_accident" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategoryFallenTree"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_fallen_tree" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategoryDamagedSign"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_damaged_sign" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategoryTrafficLight"
+                    style="@style/Widget.SmartRoad.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_traffic_light" />
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+        <!-- Compact legend: status colors + category icons -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupLegend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipSpacingHorizontal="4dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/legendStatusNew"
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_new_label"
+                    app:chipIcon="@drawable/ic_legend_dot" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/legendStatusInvestigating"
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_investigating_label"
+                    app:chipIcon="@drawable/ic_legend_dot" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/legendStatusResolved"
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status_resolved_label"
+                    app:chipIcon="@drawable/ic_legend_dot" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_pothole"
+                    app:chipIcon="@drawable/ic_hazard_pothole"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_flood"
+                    app:chipIcon="@drawable/ic_hazard_flood"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_accident"
+                    app:chipIcon="@drawable/ic_hazard_accident"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_fallen_tree"
+                    app:chipIcon="@drawable/ic_hazard_fallen_tree"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_damaged_sign"
+                    app:chipIcon="@drawable/ic_hazard_damaged_sign"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.SmartRoad.Chip.Legend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hazard_traffic_light"
+                    app:chipIcon="@drawable/ic_hazard_traffic_light"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
     </LinearLayout>
 
-    <!-- Refresh FAB (large, bottom-right, thumb-friendly) -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabRefresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/space_md"
-        android:contentDescription="@string/action_refresh"
-        app:backgroundTint="?attr/colorPrimary"
-        app:tint="?attr/colorOnPrimary"
-        app:srcCompat="@drawable/ic_refresh" />
+    <!-- Map + empty state + FABs -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabMyLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/space_md"
-        android:layout_marginBottom="88dp"
-        android:contentDescription="@string/current_location"
-        app:backgroundTint="?attr/colorSurface"
-        app:tint="?attr/colorPrimary"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_location" />
-</FrameLayout>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/mapContainer"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Empty state (logo watermark), shown when no hazards match the current filters -->
+        <LinearLayout
+            android:id="@+id/emptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:alpha="0.35"
+                android:contentDescription="@null"
+                android:src="@drawable/logo_smartroad_mark" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/no_hazards_found"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <!-- Refresh FAB (large, bottom-right, thumb-friendly) -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/space_md"
+            android:contentDescription="@string/action_refresh"
+            app:backgroundTint="?attr/colorPrimary"
+            app:srcCompat="@drawable/ic_refresh"
+            app:tint="?attr/colorOnPrimary" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabMyLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/space_md"
+            android:layout_marginBottom="88dp"
+            android:contentDescription="@string/current_location"
+            app:backgroundTint="?attr/colorSurface"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_location"
+            app:tint="?attr/colorPrimary" />
+    </FrameLayout>
+</LinearLayout>
