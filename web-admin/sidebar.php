@@ -22,9 +22,9 @@
         <a href="manage-report.php" class="<?= $active_page === 'manage-report' ? 'active' : '' ?>">
             <i class="bi bi-list-check"></i> Manage Reports
         </a>
-        <a href="hazard-form.php" class="<?= $active_page === 'hazard-form' ? 'active' : '' ?>">
+        <!-- <a href="hazard-form.php" class="<?= $active_page === 'hazard-form' ? 'active' : '' ?>">
             <i class="bi bi-exclamation-triangle"></i> Add Hazard
-        </a>
+        </a> -->
     </nav>
 
     <div class="sidebar-logout">
