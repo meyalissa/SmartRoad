@@ -109,7 +109,7 @@ async function loadReports() {
   }
 }
 
-const ROWS_PER_PAGE = 5;
+const ROWS_PER_PAGE = 9;
 let currentPage = 1;
 let pendingDeleteId = null;
 
