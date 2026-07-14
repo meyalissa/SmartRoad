@@ -73,7 +73,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         locationHelper = new LocationHelper(requireContext());
 
         setupFilterChips();
-        setupLegend();
+        setupChipIcons();
 
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.mapContainer);
@@ -125,13 +125,16 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         return MapViewModel.FILTER_ALL;
     }
 
-    /** Tints the legend's status dots from the single source of truth, {@link BrandColors}. */
-    private void setupLegend() {
-        binding.legendStatusNew.setChipIconTint(
+    /**
+     * Tints each status filter chip's icon from the single source of truth, {@link BrandColors},
+     * so the chips are self-explanatory without a separate legend row.
+     */
+    private void setupChipIcons() {
+        binding.chipStatusNew.setChipIconTint(
                 ColorStateList.valueOf(Color.parseColor(BrandColors.STATUS_NEW)));
-        binding.legendStatusInvestigating.setChipIconTint(
+        binding.chipStatusInvestigating.setChipIconTint(
                 ColorStateList.valueOf(Color.parseColor(BrandColors.STATUS_INVESTIGATION)));
-        binding.legendStatusResolved.setChipIconTint(
+        binding.chipStatusResolved.setChipIconTint(
                 ColorStateList.valueOf(Color.parseColor(BrandColors.STATUS_RESOLVED)));
     }
 

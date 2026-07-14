@@ -35,60 +35,60 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textAppearance="?attr/textAppearanceBodyMedium" />
 
-        <!-- Location card -->
+        <!-- Section: Current Location -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/current_location"
+            android:textAppearance="@style/Text.SectionHeading" />
+
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.SmartRoad.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_md">
+            android:layout_marginTop="@dimen/space_sm">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_location" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_location"
-                        android:contentDescription="@string/current_location" />
+                    android:layout_marginStart="@dimen/space_sm"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvLatitude"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/space_sm"
-                        android:text="@string/current_location"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textStyle="bold" />
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:id="@+id/tvLongitude"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvLatitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_sm"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <TextView
-                    android:id="@+id/tvLongitude"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Map preview (lite mode) -->
+        <!-- Map preview (lite mode) - shows the same "Current Location" pin plus nearby hazards -->
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.SmartRoad.Card"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:layout_marginTop="@dimen/space_md"
+            android:layout_marginTop="@dimen/space_sm"
             app:contentPadding="0dp">
 
             <com.google.android.gms.maps.MapView
@@ -99,11 +99,18 @@
                 app:mapType="normal" />
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Statistics grid (2x2): Total Reports / New / Under Investigation / Resolved -->
+        <!-- Section: Community Hazard Summary (statistics for ALL users, not just this one) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/home_stats_heading"
+            android:textAppearance="@style/Text.SectionHeading" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_md"
+            android:layout_marginTop="@dimen/space_sm"
             android:orientation="vertical">
 
             <LinearLayout
@@ -150,12 +157,20 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Section: Quick Actions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/home_quick_actions_heading"
+            android:textAppearance="@style/Text.SectionHeading" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewMap"
             style="@style/Widget.SmartRoad.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_lg"
+            android:layout_marginTop="@dimen/space_sm"
             app:icon="@drawable/ic_map"
             android:text="@string/action_view_map" />
 

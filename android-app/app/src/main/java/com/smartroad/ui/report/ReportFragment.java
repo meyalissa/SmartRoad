@@ -93,6 +93,7 @@ public class ReportFragment extends Fragment {
 
         binding.btnCamera.setOnClickListener(v -> requestCamera());
         binding.btnGallery.setOnClickListener(v -> photoPickerHelper.launchGallery());
+        binding.btnRemovePhoto.setOnClickListener(v -> clearPhoto());
         binding.btnSubmit.setOnClickListener(v -> submit());
     }
 
@@ -141,6 +142,19 @@ public class ReportFragment extends Fragment {
     private void showPreview(Uri uri) {
         if (binding == null) return;
         Glide.with(this).load(uri).centerCrop().into(binding.ivPhotoPreview);
+        binding.ivPhotoPreview.setVisibility(View.VISIBLE);
+        binding.emptyPhotoState.setVisibility(View.GONE);
+        binding.btnRemovePhoto.setVisibility(View.VISIBLE);
+    }
+
+    /** Clears the selected photo and restores the "tap to add a photo" empty state. */
+    private void clearPhoto() {
+        photoFile = null;
+        if (binding == null) return;
+        binding.ivPhotoPreview.setImageDrawable(null);
+        binding.ivPhotoPreview.setVisibility(View.GONE);
+        binding.emptyPhotoState.setVisibility(View.VISIBLE);
+        binding.btnRemovePhoto.setVisibility(View.GONE);
     }
 
     private void submit() {
@@ -196,8 +210,7 @@ public class ReportFragment extends Fragment {
         if (binding == null) return;
         binding.spinnerHazardType.setSelection(0);
         binding.etDescription.setText("");
-        binding.ivPhotoPreview.setImageResource(R.drawable.ic_gallery);
-        photoFile = null;
+        clearPhoto();
         captureDateTime();
     }
 

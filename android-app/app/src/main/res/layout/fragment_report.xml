@@ -62,16 +62,65 @@
             android:text="@string/photo"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <ImageView
-            android:id="@+id/ivPhotoPreview"
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.SmartRoad.Card"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="150dp"
             android:layout_marginTop="@dimen/space_xs"
-            android:background="@drawable/bg_photo_placeholder"
-            android:contentDescription="@string/photo"
-            android:padding="@dimen/space_sm"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_gallery" />
+            app:contentPadding="0dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/ivPhotoPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/photo"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/emptyPhotoState"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_photo_placeholder"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_camera"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_xs"
+                        android:text="@string/tap_to_add_photo"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnRemovePhoto"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="@dimen/space_xs"
+                    android:background="@drawable/bg_remove_photo_circle"
+                    android:clickable="true"
+                    android:contentDescription="@string/action_remove_photo"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:layout_width="match_parent"

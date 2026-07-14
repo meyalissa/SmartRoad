@@ -43,11 +43,20 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
+        <!-- Section: Profile Information -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/profile_info_heading"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/Text.SectionHeading" />
+
         <ImageView
             android:id="@+id/ivProfilePhoto"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_marginTop="@dimen/space_md"
+            android:layout_marginTop="@dimen/space_sm"
             android:background="@drawable/bg_stat_circle"
             android:contentDescription="@string/profile"
             android:padding="@dimen/space_md"
@@ -84,11 +93,20 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="13sp" />
 
-        <!-- Statistics grid (2x2): Total Reports / New / Under Investigation / Resolved -->
-        <LinearLayout
+        <!-- Section: My Reporting Activity (this user's own reports only) -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/profile_stats_heading"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/Text.SectionHeading" />
+
+        <!-- Statistics grid (2x2): My Reports / Reported / Under Investigation / Resolved -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
             android:orientation="vertical">
 
             <LinearLayout
@@ -135,12 +153,21 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Section: Account -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/profile_account_heading"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/Text.SectionHeading" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnMyReports"
             style="@style/Widget.SmartRoad.Button.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_xl"
+            android:layout_marginTop="@dimen/space_sm"
             app:icon="@drawable/ic_report"
             android:text="@string/my_reports" />
 

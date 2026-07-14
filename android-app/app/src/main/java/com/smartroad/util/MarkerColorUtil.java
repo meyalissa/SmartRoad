@@ -34,4 +34,18 @@ public class MarkerColorUtil {
             default:                    return R.drawable.ic_status_new;
         }
     }
+
+    /**
+     * User-facing label for a raw backend status value. The backend/API/database keep using
+     * "New" - this only renames how it reads on screen, keeping wording consistent with the
+     * "Reported -> Under Investigation -> Resolved" terminology used across the whole app.
+     */
+    public static String displayStatus(String status) {
+        if (status == null) return "Reported";
+        switch (status.toLowerCase()) {
+            case "resolved":            return "Resolved";
+            case "under investigation": return "Under Investigation";
+            default:                    return "Reported";
+        }
+    }
 }

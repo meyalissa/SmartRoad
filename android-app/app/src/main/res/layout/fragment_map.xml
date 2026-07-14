@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Permanent filter + legend panel, always visible above the map -->
+    <!-- Permanent filter panel, always visible above the map. Each chip carries its own
+         icon (status color / hazard category), so no separate legend row is needed. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,21 +51,30 @@
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/status_new_label" />
+                    android:text="@string/status_new_label"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_status_new"
+                    app:chipIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipStatusInvestigating"
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/status_investigating_label" />
+                    android:text="@string/status_investigating_chip_label"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_status_investigating"
+                    app:chipIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipStatusResolved"
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/status_resolved_label" />
+                    android:text="@string/status_resolved_label"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_status_resolved"
+                    app:chipIconVisible="true" />
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 
@@ -103,129 +113,66 @@
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hazard_pothole" />
+                    android:text="@string/hazard_pothole"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_hazard_pothole"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCategoryFlood"
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hazard_flood" />
+                    android:text="@string/hazard_flood"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_hazard_flood"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCategoryAccident"
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hazard_accident" />
+                    android:text="@string/hazard_accident"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_hazard_accident"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCategoryFallenTree"
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hazard_fallen_tree" />
+                    android:text="@string/hazard_fallen_tree"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_hazard_fallen_tree"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCategoryDamagedSign"
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hazard_damaged_sign" />
+                    android:text="@string/hazard_damaged_sign_chip_label"
+                    app:checkedIconVisible="false"
+                    app:chipIcon="@drawable/ic_hazard_damaged_sign"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCategoryTrafficLight"
                     style="@style/Widget.SmartRoad.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hazard_traffic_light" />
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
-
-        <!-- Compact legend: status colors + category icons -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_xs"
-            android:scrollbars="none">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupLegend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:chipSpacingHorizontal="4dp">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/legendStatusNew"
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status_new_label"
-                    app:chipIcon="@drawable/ic_legend_dot" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/legendStatusInvestigating"
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status_investigating_label"
-                    app:chipIcon="@drawable/ic_legend_dot" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/legendStatusResolved"
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status_resolved_label"
-                    app:chipIcon="@drawable/ic_legend_dot" />
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hazard_pothole"
-                    app:chipIcon="@drawable/ic_hazard_pothole"
-                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hazard_flood"
-                    app:chipIcon="@drawable/ic_hazard_flood"
-                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hazard_accident"
-                    app:chipIcon="@drawable/ic_hazard_accident"
-                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hazard_fallen_tree"
-                    app:chipIcon="@drawable/ic_hazard_fallen_tree"
-                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hazard_damaged_sign"
-                    app:chipIcon="@drawable/ic_hazard_damaged_sign"
-                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.SmartRoad.Chip.Legend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hazard_traffic_light"
+                    android:text="@string/hazard_traffic_light_chip_label"
+                    app:checkedIconVisible="false"
                     app:chipIcon="@drawable/ic_hazard_traffic_light"
-                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+                    app:chipIconTint="?attr/colorOnSurfaceVariant"
+                    app:chipIconVisible="true" />
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
     </LinearLayout>
@@ -267,29 +214,30 @@
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
 
-        <!-- Refresh FAB (large, bottom-right, thumb-friendly) -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabRefresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/space_md"
-            android:contentDescription="@string/action_refresh"
-            app:backgroundTint="?attr/colorPrimary"
-            app:srcCompat="@drawable/ic_refresh"
-            app:tint="?attr/colorOnPrimary" />
-
+        <!-- Custom FABs on the LEFT so they never overlap Google's zoom controls (bottom-right) -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabMyLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/space_md"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="@dimen/space_md"
             android:layout_marginBottom="88dp"
             android:contentDescription="@string/current_location"
             app:backgroundTint="?attr/colorSurface"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_location"
             app:tint="?attr/colorPrimary" />
+
+        <!-- Refresh FAB (large, bottom-left, thumb-friendly) -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/space_md"
+            android:contentDescription="@string/action_refresh"
+            app:backgroundTint="?attr/colorPrimary"
+            app:srcCompat="@drawable/ic_refresh"
+            app:tint="?attr/colorOnPrimary" />
     </FrameLayout>
 </LinearLayout>

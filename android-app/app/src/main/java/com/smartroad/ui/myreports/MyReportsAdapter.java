@@ -69,7 +69,7 @@ public class MyReportsAdapter extends RecyclerView.Adapter<MyReportsAdapter.View
             binding.tvReportLocation.setText(String.format(Locale.US, "%.5f, %.5f",
                     hazard.getLatitudeAsDouble(), hazard.getLongitudeAsDouble()));
 
-            binding.tvStatus.setText(hazard.getStatus());
+            binding.tvStatus.setText(MarkerColorUtil.displayStatus(hazard.getStatus()));
             binding.ivStatusIcon.setImageResource(MarkerColorUtil.iconForStatus(hazard.getStatus()));
             try {
                 GradientDrawable bg = (GradientDrawable) binding.statusBadge.getBackground().mutate();

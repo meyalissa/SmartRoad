@@ -23,6 +23,8 @@
     <string name="current_location">Current Location</string>
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>
+    <string name="home_stats_heading">Community Hazard Summary</string>
+    <string name="home_quick_actions_heading">Quick Actions</string>
     <string name="action_view_map">View Map</string>
     <string name="action_report_hazard">Report Hazard</string>
 
@@ -39,8 +41,10 @@
     <string name="description">Description</string>
     <string name="hint_description">Describe the hazard…</string>
     <string name="photo">Photo</string>
+    <string name="tap_to_add_photo">Tap to add a photo</string>
     <string name="action_take_photo">Camera</string>
     <string name="action_choose_gallery">Gallery</string>
+    <string name="action_remove_photo">Remove Photo</string>
     <string name="action_submit">Submit Report</string>
     <string name="gps_location">GPS Location</string>
     <string name="report_success_title">Report Submitted</string>
@@ -56,7 +60,7 @@
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="status_timeline_title">Status Timeline</string>
-    <string name="status_submitted">Submitted</string>
+    <string name="status_submitted">Reported</string>
     <string name="status_under_investigation">Under Investigation</string>
     <string name="status_resolved">Resolved</string>
     <string name="maintenance_info_title">Maintenance Information</string>
@@ -70,6 +74,9 @@
     <string name="username_label">Username</string>
     <string name="total_reports">Total Reports</string>
     <string name="joined_on">Joined %1$s</string>
+    <string name="profile_info_heading">Profile Information</string>
+    <string name="profile_stats_heading">My Reporting Activity</string>
+    <string name="profile_account_heading">Account</string>
     <string name="action_edit_profile">Edit Profile</string>
     <string name="action_logout">Logout</string>
     <string name="my_reports">My Reports</string>
@@ -130,7 +137,7 @@
     <string name="filter_all">All</string>
     <string name="filter_status_label">Status</string>
     <string name="filter_category_label">Category</string>
-    <string name="status_new_label">New</string>
+    <string name="status_new_label">Reported</string>
     <string name="status_investigating_label">Under Investigation</string>
     <string name="status_resolved_label">Resolved</string>
     <string name="hazard_pothole">Pothole</string>
@@ -139,6 +146,11 @@
     <string name="hazard_fallen_tree">Fallen Tree</string>
     <string name="hazard_damaged_sign">Damaged Road Sign</string>
     <string name="hazard_traffic_light">Broken Traffic Light</string>
+
+    <!-- Shortened chip-only labels for the Hazard Map filter bar (data/backend values unchanged) -->
+    <string name="status_investigating_chip_label">Investigation</string>
+    <string name="hazard_damaged_sign_chip_label">Road Sign</string>
+    <string name="hazard_traffic_light_chip_label">Traffic Light</string>
     <string name="info_window_status_label">Status:</string>
     <string name="info_window_reporter_label">Reported by:</string>
     <string name="info_window_date_label">Reported:</string>

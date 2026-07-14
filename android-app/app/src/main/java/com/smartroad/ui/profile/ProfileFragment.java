@@ -81,7 +81,7 @@ public class ProfileFragment extends Fragment {
     /** One-time setup of each stat card's icon, icon tint, and label (values are filled in by loadProfile()). */
     private void setupStatCards() {
         StatCardHelper.configure(binding.profileTotal.tvStatLabel, binding.profileTotal.ivStatIcon,
-                R.string.total_reports, R.drawable.ic_total_reports,
+                R.string.my_reports, R.drawable.ic_total_reports,
                 requireContext().getColor(R.color.primaryColor));
 
         StatCardHelper.configure(binding.profileNew.tvStatLabel, binding.profileNew.ivStatIcon,

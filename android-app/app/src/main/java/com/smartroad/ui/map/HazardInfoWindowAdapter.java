@@ -44,7 +44,7 @@ public class HazardInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         if (hazard == null) return null;
 
         binding.textHazardType.setText(hazard.getType());
-        binding.textStatus.setText(hazard.getStatus());
+        binding.textStatus.setText(MarkerColorUtil.displayStatus(hazard.getStatus()));
         binding.textStatus.setTextColor(Color.parseColor(MarkerColorUtil.statusColor(hazard.getStatus())));
         binding.textReporter.setText(hazard.getReporter());
         binding.textDate.setText(hazard.getDatetime());
