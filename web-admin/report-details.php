@@ -171,31 +171,59 @@ require_once 'auth.php';
 
                 const lat = Number(report.lat);
                 const lng = Number(report.lng);
+
                 document.getElementById("editLatitude").value = lat;
                 document.getElementById("editLongitude").value = lng;
                 document.getElementById("reportCoords").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
                 const photoImg = document.getElementById("reportPhoto");
+
                 if (report.photo) {
                     photoImg.src = "uploads/" + report.photo;
                     photoImg.style.display = "block";
+                } else {
+                    photoImg.src = "";
+                    photoImg.style.display = "none";
                 }
 
-                // Maintenance section — load existing record if one exists,
-                // otherwise leave the form blank ready for creation.
+
+                // Maintenance section
                 document.getElementById("maintenanceTeam").value = report.maintenance_team || "";
                 document.getElementById("maintenanceNotes").value = report.maintenance_notes || "";
-                document.getElementById("repairDate").value = report.repair_date ? report.repair_date.substring(0, 10) : "";
-                document.getElementById("completedDate").value = report.completed_date ? report.completed_date.substring(0, 10) : "";
+                document.getElementById("repairDate").value = report.repair_date 
+                    ? report.repair_date.substring(0, 10) 
+                    : "";
+
+                document.getElementById("completedDate").value = report.completed_date 
+                    ? report.completed_date.substring(0, 10) 
+                    : "";
+
+
+                // ================================
+                // FIX LEAFLET MAP REINITIALIZATION
+                // ================================
+                if (map) {
+                    map.remove();
+                    map = null;
+                    marker = null;
+                }
+
 
                 map = L.map('map', { zoomControl: false }).setView([lat, lng], 15);
+
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
+
                 marker = L.marker([lat, lng]).addTo(map);
 
-                // Ensure Leaflet recalculates correctly with the smaller 100px height window
-                setTimeout(() => { map.invalidateSize(); }, 200);
+
+                // Ensure Leaflet recalculates correctly
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 200);
+
+
             } catch (error) {
                 console.error(error);
                 alert("Failed loading report");
@@ -264,7 +292,7 @@ require_once 'auth.php';
                 }
 
                 alert("Report updated successfully.");
-                await loadReport();
+                window.location.href = "manage-report.php";
             } catch (error) {
                 console.error(error);
                 alert("Server error while saving the report.");
