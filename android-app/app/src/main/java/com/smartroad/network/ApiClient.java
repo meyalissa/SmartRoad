@@ -17,24 +17,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Central Retrofit configuration.
  *
  * >>> CHANGE THE BACKEND HERE <<<
- *   - BASE_URL : local Laragon PHP backend. Emulator uses 10.0.2.2 (the
- *                emulator's alias for the host machine's localhost);
- *                a physical device on the same Wi-Fi must use the dev
- *                machine's LAN IP instead — update DEVICE_LAN_IP below if
- *                your network changes.
+ *   - Debug builds talk to the local Laragon PHP backend: the emulator uses
+ *     10.0.2.2 (its alias for the host machine's localhost), while a physical
+ *     device on the same Wi-Fi uses the dev machine's LAN IP instead. Both
+ *     values come from BuildConfig, sourced from local.properties'
+ *     DEVICE_LAN_IP — update that file if your network changes.
+ *   - Release builds use BuildConfig.BASE_URL (set in app/build.gradle).
  *
  * Every module (login, hazards, report submission, profile) talks to the
  * live PHP backend — there is no offline/demo mode.
  */
 public class ApiClient {
 
-    // Physical-device fallback: this machine's LAN IP (Wi-Fi). Update if it changes.
-    private static final String DEVICE_LAN_IP = "10.82.146.84";
+    private static final String DEVICE_BASE_URL =
+            "http://" + BuildConfig.DEVICE_LAN_IP + "/SmartRoad/web-admin/api/";
 
-    private static final String EMULATOR_BASE_URL = "http://10.0.2.2/SmartRoad/web-admin/api/";
-    private static final String DEVICE_BASE_URL = "http://" + DEVICE_LAN_IP + "/SmartRoad/web-admin/api/";
-
-    public static final String BASE_URL = isEmulator() ? EMULATOR_BASE_URL : DEVICE_BASE_URL;
+    public static final String BASE_URL = BuildConfig.DEBUG
+            ? (isEmulator() ? BuildConfig.EMULATOR_BASE_URL : DEVICE_BASE_URL)
+            : BuildConfig.BASE_URL;
 
     private static Retrofit retrofit;
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Production: no cleartext exceptions. The dev-only exceptions (emulator
+         alias, dev machine LAN IP, localhost) live in src/debug and never
+         ship in a release build. All traffic must use HTTPS. -->
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>
