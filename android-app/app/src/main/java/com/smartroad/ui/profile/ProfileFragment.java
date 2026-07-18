@@ -31,6 +31,7 @@ import com.smartroad.util.SessionManager;
 import com.smartroad.util.StatCardHelper;
 import com.smartroad.viewmodel.ProfileViewModel;
 
+/** Shows the current user's profile, report stats, and entry points to edit profile, my reports and logout. */
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;

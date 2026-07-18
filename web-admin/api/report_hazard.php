@@ -10,6 +10,7 @@ require_once __DIR__ . '/_helpers.php';
 
 const UPLOAD_DIR = __DIR__ . '/../uploads/';
 
+/** Wraps apiRespond() with this endpoint's id + message response shape. */
 function respond(int $httpCode, string $status, ?string $id, string $message): void {
     apiRespond($httpCode, $status, ['id' => $id, 'message' => $message]);
 }

@@ -1,4 +1,8 @@
 <?php
+/**
+ * SmartRoad Admin — Login page authenticating against admin_users.
+ */
+
 session_start();
 
 if (!empty($_SESSION['admin_id'])) {

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.smartroad.R;
 import com.smartroad.databinding.ActivityAboutBinding;
 
+/** Displays app version info and a link to the project's GitHub repository. */
 public class AboutActivity extends AppCompatActivity {
 
     private ActivityAboutBinding binding;

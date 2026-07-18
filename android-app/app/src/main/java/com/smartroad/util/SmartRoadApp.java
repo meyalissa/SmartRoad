@@ -2,7 +2,7 @@ package com.smartroad.util;
 
 import android.app.Application;
 
-/** Application subclass — single place for app-wide init if needed. */
+/** Application entry point for SmartRoad. */
 public class SmartRoadApp extends Application {
     @Override
     public void onCreate() {

@@ -1,9 +1,8 @@
 <?php
-/* ============================================================
-   DELETE /delete_report.php?id=123
-   Deletes the report row, and its photo file from /uploads if
-   one exists.
-   ============================================================ */
+/**
+ * DELETE /delete_report.php?id=123
+ * Deletes the report row, and its photo file from /uploads if one exists.
+ */
 
 require_once __DIR__ . '/db.php';
 require_once 'auth.php';
@@ -34,8 +33,6 @@ try {
         exit;
     }
 
-    // NOTE: adjust this path if your uploads folder lives somewhere else,
-    // e.g. C:\laragon\www\SmartRoad\SmartRoad\uploads\ would be __DIR__ . '/../uploads/'
     if (!empty($report['photo'])) {
         $photoPath = __DIR__ . '/uploads/' . $report['photo'];
         if (file_exists($photoPath)) {

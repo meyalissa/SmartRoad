@@ -19,6 +19,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 
+/** Retrofit definitions for the SmartRoad PHP backend endpoints. */
 public interface ApiService {
 
     @FormUrlEncoded

@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Full-screen map of all reported hazards, filterable by status and category, with the user's current location. */
 public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
 
     private FragmentMapBinding binding;

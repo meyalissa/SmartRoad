@@ -2,6 +2,7 @@ package com.smartroad.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/** Response payload returned by report_hazard.php after submitting a new hazard report. */
 public class ReportResponse {
     @SerializedName("status")
     private String status;

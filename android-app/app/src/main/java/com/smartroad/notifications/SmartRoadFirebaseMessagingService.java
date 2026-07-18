@@ -9,19 +9,15 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.smartroad.util.SessionManager;
 
 /**
- * Structural scaffold for future push notifications (e.g. hazard status
- * changes). Captures/stores the FCM token and logs incoming messages only —
- * no notification channel, display, or server token-upload is implemented
- * yet. Wire those up once notifications are actually prioritized.
+ * Handles Firebase Cloud Messaging lifecycle events for SmartRoad: captures
+ * the FCM registration token and receives incoming push messages.
  */
 public class SmartRoadFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "SmartRoadFcm";
 
     // onNewToken(String) is flagged deprecated by the resolved firebase-messaging
-    // BOM version with no documented replacement signature yet — suppressed
-    // rather than guessed at; revisit against current Firebase docs when
-    // notifications are actually implemented.
+    // BOM version with no documented replacement signature.
     @SuppressWarnings("deprecation")
     @Override
     public void onNewToken(@NonNull String token) {

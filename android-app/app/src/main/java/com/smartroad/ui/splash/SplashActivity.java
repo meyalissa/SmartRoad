@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.smartroad.databinding.ActivitySplashBinding;
 import com.smartroad.ui.auth.LoginActivity;
 
+/** Brief animated splash screen shown on app launch before routing to {@link LoginActivity}. */
 public class SplashActivity extends AppCompatActivity {
 
     private static final long FADE_DURATION_MS = 600;

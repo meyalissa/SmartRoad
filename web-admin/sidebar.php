@@ -1,13 +1,9 @@
 <?php
 /**
- * SmartRoad — Sidebar nav (shared across dashboard, manage-report, hazard-form)
- * Place this in web-admin/.
- * Before including it, set: $active_page = 'dashboard'; (or 'manage-report', 'hazard-form')
- * Requires auth.php to have already run so $_SESSION['admin_name'] exists.
- *
- * Uses Bootstrap Icons (CDN). Make sure this line is in the <head> of every
- * page that includes this sidebar:
- * <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+ * SmartRoad — Sidebar navigation shared across the dashboard, manage-report,
+ * and hazard-form pages. Expects $active_page to identify the current page
+ * and relies on auth.php having already run so $_SESSION['admin_name'] and
+ * $_SESSION['admin_id'] are available. Icons are provided by Bootstrap Icons.
  */
 ?>
 <aside class="sidebar">

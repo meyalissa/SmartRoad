@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/** Form for submitting a new hazard report with type, description, photo, location and timestamp. */
 public class ReportFragment extends Fragment {
 
     private FragmentReportBinding binding;

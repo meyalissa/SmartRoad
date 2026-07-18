@@ -1,4 +1,8 @@
 <?php
+/**
+ * SmartRoad Admin — Form for manually adding a hazard report.
+ */
+
 require_once 'db.php';
 require_once 'auth.php';
 

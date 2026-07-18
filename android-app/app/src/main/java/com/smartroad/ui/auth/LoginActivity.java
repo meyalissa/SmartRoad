@@ -13,6 +13,7 @@ import com.smartroad.ui.main.MainActivity;
 import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.LoginViewModel;
 
+/** Authenticates a user and, on success, starts a session and hands off to {@link MainActivity}. */
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;

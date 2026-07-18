@@ -23,10 +23,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/** Repository responsible for user authentication and profile management via the API. */
 public class UserRepository {
 
     private final ApiService api = ApiClient.getApiService();
 
+    /** Authenticates a user with the given credentials. */
     public LiveData<LoginResponse> login(String username, String password) {
         final MutableLiveData<LoginResponse> result = new MutableLiveData<>();
 
@@ -62,6 +64,7 @@ public class UserRepository {
         return result;
     }
 
+    /** Fetches the profile for the given user. */
     public LiveData<ProfileResponse> getProfile(String userId) {
         final MutableLiveData<ProfileResponse> result = new MutableLiveData<>();
 
@@ -86,6 +89,7 @@ public class UserRepository {
         return result;
     }
 
+    /** Updates the user's profile details, compressing the new photo before upload if provided. */
     public LiveData<ApiResponse> updateProfile(String userId, String fullName, String email, File photo) {
         final MutableLiveData<ApiResponse> result = new MutableLiveData<>();
 
@@ -119,6 +123,7 @@ public class UserRepository {
         return result;
     }
 
+    /** Changes the user's password after verifying the current password. */
     public LiveData<ApiResponse> changePassword(String userId, String currentPassword,
                                                 String newPassword, String confirmPassword) {
         final MutableLiveData<ApiResponse> result = new MutableLiveData<>();

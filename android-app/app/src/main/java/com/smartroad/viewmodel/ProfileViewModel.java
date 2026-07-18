@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.smartroad.model.ProfileResponse;
 import com.smartroad.repository.UserRepository;
 
+/** Backs the profile screen, delegating profile retrieval to {@link UserRepository}. */
 public class ProfileViewModel extends ViewModel {
 
     private final UserRepository repository = new UserRepository();

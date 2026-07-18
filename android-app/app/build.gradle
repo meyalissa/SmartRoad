@@ -4,13 +4,16 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
-// Read MAPS_API_KEY from local.properties so the key is never hard-coded in source.
+// Read MAPS_API_KEY / DEVICE_LAN_IP from local.properties so neither is ever
+// hard-coded in source. local.properties is machine-specific and gitignored.
 def mapsApiKey = ""
+def deviceLanIp = ""
 def localPropsFile = rootProject.file("local.properties")
 if (localPropsFile.exists()) {
     def props = new Properties()
     props.load(new FileInputStream(localPropsFile))
     mapsApiKey = props.getProperty("MAPS_API_KEY", "")
+    deviceLanIp = props.getProperty("DEVICE_LAN_IP", "")
 }
 
 android {
@@ -29,9 +32,22 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Local Laragon backend only. EMULATOR_BASE_URL is the emulator's
+            // alias for the host machine; DEVICE_LAN_IP lets a physical device
+            // on the same Wi-Fi reach it too (see ApiClient.java).
+            buildConfigField "String", "EMULATOR_BASE_URL", "\"http://10.0.2.2/SmartRoad/web-admin/api/\""
+            buildConfigField "String", "DEVICE_LAN_IP", "\"${deviceLanIp}\""
+            buildConfigField "String", "BASE_URL", "\"\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // Production backend. Update to the real deployed API host before shipping.
+            buildConfigField "String", "BASE_URL", "\"https://your-production-domain/api/\""
+            buildConfigField "String", "EMULATOR_BASE_URL", "\"\""
+            buildConfigField "String", "DEVICE_LAN_IP", "\"\""
         }
     }
 

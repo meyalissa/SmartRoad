@@ -1,4 +1,10 @@
 <?php
+/**
+ * GET /get_report.php
+ * Returns all hazard reports as JSON, joined with the reporting user and
+ * any associated maintenance record.
+ */
+
 require_once __DIR__ . '/db.php';
 require_once 'auth.php';
 

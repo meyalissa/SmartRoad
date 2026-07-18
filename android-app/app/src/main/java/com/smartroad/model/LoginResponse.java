@@ -2,6 +2,7 @@ package com.smartroad.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/** Response payload returned by login.php. */
 public class LoginResponse {
     @SerializedName("status")
     private String status;

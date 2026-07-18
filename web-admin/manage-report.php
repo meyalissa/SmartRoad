@@ -1,4 +1,8 @@
 <?php
+  /**
+   * SmartRoad Admin — Manage Reports page: searchable, filterable, paginated
+   * table of hazard reports with view and delete actions.
+   */
   require_once 'auth.php';
 ?>
 <!DOCTYPE html>

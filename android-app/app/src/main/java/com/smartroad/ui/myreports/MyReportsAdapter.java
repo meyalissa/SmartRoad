@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/** Binds a user's hazard reports to a RecyclerView, showing photo, type, status and location for each. */
 public class MyReportsAdapter extends RecyclerView.Adapter<MyReportsAdapter.ViewHolder> {
 
     public interface OnReportClickListener {

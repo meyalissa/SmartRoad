@@ -14,18 +14,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Central Retrofit configuration.
- *
- * >>> CHANGE THE BACKEND HERE <<<
- *   - Debug builds talk to the local Laragon PHP backend: the emulator uses
- *     10.0.2.2 (its alias for the host machine's localhost), while a physical
- *     device on the same Wi-Fi uses the dev machine's LAN IP instead. Both
- *     values come from BuildConfig, sourced from local.properties'
- *     DEVICE_LAN_IP — update that file if your network changes.
- *   - Release builds use BuildConfig.BASE_URL (set in app/build.gradle).
- *
- * Every module (login, hazards, report submission, profile) talks to the
- * live PHP backend — there is no offline/demo mode.
+ * Central Retrofit configuration. Selects the API base URL for the current
+ * build: debug builds resolve to the emulator loopback alias or the device's
+ * LAN IP depending on where the app is running, while release builds use
+ * {@code BuildConfig.BASE_URL}.
  */
 public class ApiClient {
 

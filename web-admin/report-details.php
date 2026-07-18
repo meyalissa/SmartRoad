@@ -1,4 +1,8 @@
 <?php
+/**
+ * SmartRoad Admin — Report Details page: view and edit a single hazard
+ * report, including its maintenance record and map location.
+ */
 require_once 'auth.php';
 ?>
 <!DOCTYPE html>
@@ -199,15 +203,13 @@ require_once 'auth.php';
                     : "";
 
 
-                // ================================
-                // FIX LEAFLET MAP REINITIALIZATION
-                // ================================
+                // Tear down any existing map instance before reinitializing,
+                // since a report can be loaded more than once per page view.
                 if (map) {
                     map.remove();
                     map = null;
                     marker = null;
                 }
-
 
                 map = L.map('map', { zoomControl: false }).setView([lat, lng], 15);
 
@@ -217,8 +219,8 @@ require_once 'auth.php';
 
                 marker = L.marker([lat, lng]).addTo(map);
 
-
-                // Ensure Leaflet recalculates correctly
+                // Leaflet needs a resize pass once its container is visible
+                // and sized, otherwise tiles can render at the wrong extent.
                 setTimeout(() => {
                     map.invalidateSize();
                 }, 200);

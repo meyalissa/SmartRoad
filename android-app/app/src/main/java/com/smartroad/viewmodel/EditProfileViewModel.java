@@ -8,6 +8,7 @@ import com.smartroad.repository.UserRepository;
 
 import java.io.File;
 
+/** Backs the edit-profile screen, delegating profile updates to {@link UserRepository}. */
 public class EditProfileViewModel extends ViewModel {
 
     private final UserRepository repository = new UserRepository();

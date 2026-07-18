@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.smartroad.model.ApiResponse;
 import com.smartroad.repository.UserRepository;
 
+/** Backs the change-password screen, delegating password updates to {@link UserRepository}. */
 public class ChangePasswordViewModel extends ViewModel {
 
     private final UserRepository repository = new UserRepository();

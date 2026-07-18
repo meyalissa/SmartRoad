@@ -24,10 +24,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/** Repository responsible for fetching, submitting, and tracking hazard reports via the API. */
 public class HazardRepository {
 
     private final ApiService api = ApiClient.getApiService();
 
+    /** Fetches all hazard reports visible on the map. */
     public LiveData<List<Hazard>> getHazards() {
         final MutableLiveData<List<Hazard>> result = new MutableLiveData<>();
 
@@ -50,6 +52,7 @@ public class HazardRepository {
         return result;
     }
 
+    /** Fetches the hazard reports submitted by the given user. */
     public LiveData<List<Hazard>> getMyReports(String userId) {
         final MutableLiveData<List<Hazard>> result = new MutableLiveData<>();
 
@@ -69,6 +72,7 @@ public class HazardRepository {
         return result;
     }
 
+    /** Fetches the full details of a single hazard report by its ID. */
     public LiveData<Hazard> getReportDetails(String id) {
         final MutableLiveData<Hazard> result = new MutableLiveData<>();
 
@@ -89,6 +93,7 @@ public class HazardRepository {
     private static final int MAX_UPLOAD_RETRIES = 2;
     private static final long RETRY_DELAY_MS = 1500L;
 
+    /** Submits a new hazard report, compressing the attached photo before upload. */
     public LiveData<ReportResponse> submitHazard(String userId, String hazardType, String description,
                                                  String latitude, String longitude,
                                                  String datetime, File photo) {

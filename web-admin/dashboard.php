@@ -1,16 +1,21 @@
 <?php
+/**
+ * SmartRoad Admin — Dashboard page displaying hazard and maintenance
+ * statistics alongside the most recently submitted reports.
+ */
+
 require_once 'auth.php';
 require_once 'db.php';
 
 $active_page = 'dashboard';
 
-// --- Stat cards -------------------------------------------------
+// Stat cards
 $totalUsers    = $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
 $totalReports  = $pdo->query('SELECT COUNT(*) FROM hazard_reports')->fetchColumn();
 $openReports   = $pdo->query("SELECT COUNT(*) FROM hazard_reports WHERE status != 'Resolved'")->fetchColumn();
 $resolvedCount = $pdo->query("SELECT COUNT(*) FROM hazard_reports WHERE status = 'Resolved'")->fetchColumn();
 
-// --- Recent reports (latest 5, joined with the reporting user) --
+// Recent reports 
 $recent = $pdo->query("
     SELECT hr.id, hr.hazard_type, hr.status, hr.reported_at, u.full_name, u.profile_picture
     FROM hazard_reports hr

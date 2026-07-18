@@ -2,6 +2,7 @@ package com.smartroad.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/** Response payload returned by profile.php, combining account details with report statistics. */
 public class ProfileResponse {
     @SerializedName("status")
     private String status;

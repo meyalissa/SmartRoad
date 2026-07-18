@@ -16,6 +16,7 @@ import com.smartroad.ui.detail.HazardDetailActivity;
 import com.smartroad.util.SessionManager;
 import com.smartroad.viewmodel.MyReportsViewModel;
 
+/** Lists the hazard reports submitted by the current user, refreshable via pull-to-refresh. */
 public class MyReportsActivity extends AppCompatActivity {
 
     private ActivityMyReportsBinding binding;

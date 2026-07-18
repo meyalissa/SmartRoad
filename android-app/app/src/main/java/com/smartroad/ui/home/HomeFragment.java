@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/** Landing screen showing hazard stat cards, a live clock, current location, and a lite-mode map preview. */
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;

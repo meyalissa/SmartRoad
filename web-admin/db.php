@@ -1,15 +1,12 @@
 <?php
 /**
- * SmartRoad — Database connection
- * Place this file directly in web-admin/ (same folder as login.php,
- * dashboard.php, manage-report.php, hazard-form.php).
- * Every page that needs the DB does: require_once 'db.php';
+ * SmartRoad — Shared PDO database connection used across the admin panel.
  */
 
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'smartroad');
 define('DB_USER', 'root');
-define('DB_PASS', '');   // default XAMPP root password is empty
+define('DB_PASS', '');
 
 try {
     $pdo = new PDO(

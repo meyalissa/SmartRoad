@@ -12,6 +12,7 @@ import com.smartroad.R;
 import com.smartroad.databinding.ActivityMainBinding;
 import com.smartroad.ui.about.AboutActivity;
 
+/** Host activity for the app's bottom-navigation graph (Home, Map, Report, Profile). */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
